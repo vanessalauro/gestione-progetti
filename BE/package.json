@@ -1,0 +1,13 @@
+{
+    "name": "gestione-progetti-backend",
+    "version": "1.0.0",
+    "description": "Backend for project management application",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "mongodb": "^5.6.0",
+        "mongoose": "^6.0.8"
+    }
+}
