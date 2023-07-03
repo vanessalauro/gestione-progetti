@@ -8,6 +8,4 @@ const documentSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-const Document = mongoose.model('Document', documentSchema);
-
-module.exports = Document;
+module.exports = mongoose.model('Document', documentSchema);
