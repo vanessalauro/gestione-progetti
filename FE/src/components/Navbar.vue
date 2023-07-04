@@ -1,55 +1,50 @@
 <template>
-    <nav class="navbar">
-      <div class="navbar-brand">
-        <router-link to="/" class="navbar-item">Logo</router-link>
-      </div>
-      <div class="navbar-menu">
-        <div class="navbar-start">
-          <router-link to="/" class="navbar-item">Home</router-link>
-          <router-link to="/about" class="navbar-item">About</router-link>
-          <router-link to="/services" class="navbar-item">Services</router-link>
-          <router-link to="/contact" class="navbar-item">Contact</router-link>
-        </div>
-        <div class="navbar-end">
-          <router-link to="/login" class="navbar-item">Login</router-link>
-          <router-link to="/register" class="navbar-item">Register</router-link>
-        </div>
-      </div>
-    </nav>
-  </template>
+  <nav class="navbar">
+    <ul class="navbar-left">
+      <li><router-link to="/">Home</router-link></li>
+      <li><router-link to="/projects">Projects</router-link></li>
+      <!-- Aggiungi altre pagine qui -->
+    </ul>
+    <ul class="navbar-right">
+      <li><button @click="logout">Logout</button></li>
+    </ul>
+  </nav>
+</template>
   
-  <script>
-  export default {
-    name: 'Navbar',
+<script>
+export default {
+  name: "Navbar",
+  methods: {
+    logout() {
+      // Logica per eseguire il logout dell'utente
+      // Puoi implementare qui la tua logica per il logout
+    }
   }
-  </script>
+}
+</script>
   
-  <style>
-  .navbar {
-    background-color: #f1f1f1;
-    padding: 10px;
-  }
-  
-  .navbar-brand {
-    font-weight: bold;
-  }
-  
-  .navbar-item {
-    margin-right: 10px;
-    text-decoration: none;
-    color: #333;
-  }
-  
-  .navbar-item:hover {
-    color: #000;
-  }
-  
-  .navbar-start {
-    margin-right: auto;
-  }
-  
-  .navbar-end {
-    margin-left: auto;
-  }
-  </style>
-  
+<style scoped>
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f2f2f2;
+  padding: 10px;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar ul li {
+  margin-right: 10px;
+}
+
+.navbar-right {
+  margin-left: auto;
+}
+</style>

@@ -23,7 +23,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Middlewares locali
-app.use('/api/projects', require('./routes/projects'));
+// app.use('/api/projects', require('./routes/projects'));
+// app.use('/api/auth', require('./routes/auth'));
+
 
 // Avvio del server
 app.listen(PORT, () => {

@@ -12,34 +12,9 @@ export default {
   router,
   data() {
     return {
-      isLoggedIn: false,
       pageTitle: 'Homepage',
-    };
-  },
-  methods: {
-    login() {
-      // Logica per eseguire l'accesso dell'utente
-      this.isLoggedIn = true;
-    },
-    logout() {
-      // Logica per eseguire il logout dell'utente
-      this.isLoggedIn = false;
-    },
-  },
-  computed: {
-    welcomeMessage() {
-      return this.isLoggedIn ? 'Benvenuto!' : 'Effettua il login per continuare.';
-    },
-  },
-  watch: {
-    isLoggedIn(newValue) {
-      if (newValue) {
-        console.log('L\'utente ha effettuato l\'accesso.');
-      } else {
-        console.log('L\'utente ha eseguito il logout.');
-      }
-    },
-  },
+    }
+  }
 };
 
 </script>

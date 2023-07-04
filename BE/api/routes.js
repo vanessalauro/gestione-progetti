@@ -17,4 +17,7 @@ router.put('/projects/:id', projectsController.updateProject);
 // DELETE /projects/:id
 router.delete('/projects/:id', projectsController.deleteProject);
 
+// POST /api/auth
+router.post('/api/auth', AuthController.login);
+
 module.exports = router;

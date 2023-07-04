@@ -22,6 +22,7 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
+    mame: "DocumentManager",
     data() {
         return {
             showModal: false,
