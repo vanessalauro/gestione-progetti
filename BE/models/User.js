@@ -1,4 +1,6 @@
 // Definisci lo schema e il modello per la collezione "Utenti"
+const mongoose = require("mongoose");
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,

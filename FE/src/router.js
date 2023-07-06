@@ -25,28 +25,30 @@ const router = new VueRouter({
       component: Dashboard,
       meta: {
         requiresAuth: true // Pagina che richiede autenticazione
-      }
+      },
+      children: [
+        {
+          path: "/user-projects",
+          name: "UserProjects",
+          component: UserProjects,
+          meta: {
+            requiresAuth: true // Pagina che richiede autenticazione
+          }
+        },
+        {
+          path: "/edit-project/:id",
+          name: "EditProject",
+          component: EditProject,
+          meta: {
+            requiresAuth: true // Pagina che richiede autenticazione
+          }
+        }
+      ]
     },
     {
       path: "/admin-manager",
       name: "AdminManager",
       component: AdminManager,
-      meta: {
-        requiresAuth: true // Pagina che richiede autenticazione
-      }
-    },
-    {
-      path: "/user-projects",
-      name: "UserProjects",
-      component: UserProjects,
-      meta: {
-        requiresAuth: true // Pagina che richiede autenticazione
-      }
-    },
-    {
-      path: "/edit-project/:id",
-      name: "EditProject",
-      component: EditProject,
       meta: {
         requiresAuth: true // Pagina che richiede autenticazione
       }

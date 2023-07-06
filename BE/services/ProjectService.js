@@ -10,6 +10,10 @@ class ProjectService {
     return await this.projectModel.find().sort({ createdAt: -1 });
   }
 
+  async getProjectById(id) {
+    return await this.projectModel.findById(id);
+  }
+
   async createProject(project) {
     return await this.projectModel.create(project);
   }

@@ -18,6 +18,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -29,28 +30,29 @@ export default {
     login() {
       // Dati di login inseriti dall'utente (es. username e password)
       const userData = {
-        username: this.username.value,
-        password: this.password.value,
+        username: this.username,
+        password: this.password,
       };
 
-      fetch('/api/auth', {
+      // Opzioni di configurazione della richiesta
+      const requestOptions = {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: userData.username,
-          password: userData.password,
-        }),
-      })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      };
+
+      // Effettua la chiamata API al percorso '/api/login'
+      fetch('/api/login', requestOptions)
         .then(response => response.json())
         .then(data => {
           // La richiesta è stata eseguita con successo
           console.log(data);
+          // Esegui le azioni necessarie in caso di successo
         })
         .catch(error => {
           // Si è verificato un errore durante la richiesta
           console.error(error);
+          // Esegui le azioni necessarie in caso di errore
         });
     }
   }
