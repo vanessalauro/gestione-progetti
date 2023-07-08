@@ -3,7 +3,7 @@ const Project = require("../models/Project");
 
 class ProjectService {
   constructor() {
-    this.projectModel = mongoose.model("Project");
+    this.projectModel = Project;
   }
 
   async getAllProjects() {

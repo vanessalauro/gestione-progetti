@@ -4,61 +4,63 @@ import Dashboard from "./components/Dashboard";
 import UserProjects from "./components/UserProjects";
 import EditProject from "./components/EditProject";
 // import EditProfile from "./components/EditProfile";
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+// import VueRouter from 'vue-router';
 
-Vue.use(VueRouter);
+import { createRouter, createWebHistory, RouterLink, RouterView } from 'vue-router';
 
-const router = new VueRouter({
-  routes: [
-    {
-      path: "/login",
-      name: "Login",
-      component: Login,
-      meta: {
-        requiresAuth: false // Pagina senza autenticazione
-      }
+const routes = [
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: {
+      requiresAuth: false // Pagina senza autenticazione
+    }
+  },
+  {
+    path: "/",
+    name: "Dashboard",
+    component: Dashboard,
+    meta: {
+      requiresAuth: false // Pagina che richiede autenticazione
     },
-    {
-      path: "/",
-      name: "Dashboard",
-      component: Dashboard,
-      meta: {
-        requiresAuth: true // Pagina che richiede autenticazione
-      },
-      children: [
-        {
-          path: "/user-projects",
-          name: "UserProjects",
-          component: UserProjects,
-          meta: {
-            requiresAuth: true // Pagina che richiede autenticazione
-          }
-        },
-        {
-          path: "/edit-project/:id",
-          name: "EditProject",
-          component: EditProject,
-          meta: {
-            requiresAuth: true // Pagina che richiede autenticazione
-          }
+    children: [
+      {
+        path: "/user-projects",
+        name: "UserProjects",
+        component: UserProjects,
+        meta: {
+          requiresAuth: true // Pagina che richiede autenticazione
         }
-      ]
-    },
-    {
-      path: "/admin-manager",
-      name: "AdminManager",
-      component: AdminManager,
-      meta: {
-        requiresAuth: true // Pagina che richiede autenticazione
+      },
+      {
+        path: "/edit-project/:id",
+        name: "EditProject",
+        component: EditProject,
+        meta: {
+          requiresAuth: true // Pagina che richiede autenticazione
+        }
       }
-    },
-    /*{
-      path: "/edit-profile",
-      name: "EditProfile",
-      component: EditProfile,
-    },*/
-  ]
+    ]
+  },
+  {
+    path: "/admin-manager",
+    name: "AdminManager",
+    component: AdminManager,
+    meta: {
+      requiresAuth: true // Pagina che richiede autenticazione
+    }
+  },
+  /*{
+    path: "/edit-profile",
+    name: "EditProfile",
+    component: EditProfile,
+  },*/
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
 });
 
 router.beforeEach((to, from, next) => {
@@ -81,4 +83,5 @@ function checkAuth() {
   return false;
 }
 
+export { RouterLink, RouterView };
 export default router;

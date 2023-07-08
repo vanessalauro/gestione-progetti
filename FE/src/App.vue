@@ -5,18 +5,17 @@
 </template>
 
 <script>
-import router from "./router";
+import { defineComponent } from 'vue';
+import { RouterView } from 'vue-router';
 
-export default {
+export default defineComponent({
   name: 'App',
-  router,
   data() {
     return {
       pageTitle: 'Homepage',
     }
   }
-};
-
+});
 </script>
 
 <style>
@@ -27,6 +26,5 @@ export default {
   text-align: center;
   color: #2c3e50;
   width: 100%;
-  /*margin-top: 60px;*/
 }
 </style>

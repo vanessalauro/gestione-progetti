@@ -6,11 +6,13 @@ const jwt = require('jsonwebtoken');
 
 class AuthService {
   constructor() {
-    this.userModel = mongoose.model("User");
+    this.userModel = mongoose.model("users", User);
   }
 
   async login(username, password) {
+    console.log(username);
     const user = await this.userModel.findOne({ username });
+    
     if (user && user.comparePassword(password)) {
       // Le credenziali sono valide, restituisci l'utente
       return user;
@@ -33,4 +35,4 @@ class AuthService {
   }
 }
 
-module.exports = AuthService;
+module.exports = new AuthService();

@@ -1,9 +1,9 @@
 {
-    "users": [
+    "user": [
         {
             "id": 1,
-            "username": "user1",
-            "password": "password1",
+            "username": "admin",
+            "password": "admin",
             "operator": "Operator 1",
             "nucleo": "Nucleus 1",
             "team": "Team 1"
@@ -17,7 +17,7 @@
             "team": "Team 2"
         }
     ],
-    "projects": [
+    "project": [
         {
             "id": 1,
             "projectNumber": "P001",
@@ -39,7 +39,7 @@
             "status": "Completed"
         }
     ],
-    "documents": [
+    "document": [
         {
             "id": 1,
             "projectId": 1,

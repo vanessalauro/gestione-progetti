@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
   data() {
@@ -42,16 +43,19 @@ export default {
       };
 
       // Effettua la chiamata API al percorso '/api/login'
-      fetch('/api/login', requestOptions)
-        .then(response => response.json())
+      axios.post('http://localhost:3000/login', requestOptions)
+        .then(response => {
+          console.log('response: ', response);
+        })
         .then(data => {
           // La richiesta è stata eseguita con successo
-          console.log(data);
+          console.log('data:', data);
+          console.log('Chiamata POST riuscita:', response.data);
           // Esegui le azioni necessarie in caso di successo
         })
         .catch(error => {
           // Si è verificato un errore durante la richiesta
-          console.error(error);
+          console.log(error);
           // Esegui le azioni necessarie in caso di errore
         });
     }

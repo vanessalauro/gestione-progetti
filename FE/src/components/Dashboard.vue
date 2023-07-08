@@ -1,5 +1,5 @@
+<Navbar></Navbar>
 <template>
-  <Navbar></Navbar>
   <div id="dashboard">
     <form @submit="cercaInterventi">
       <div>
@@ -37,6 +37,7 @@
         <table>
           <thead>
             <tr>
+              <th></th>
               <th>Commessa</th>
               <th>ID Intervento</th>
               <th>Stato</th>
@@ -49,10 +50,14 @@
               <th>In Lavorazione</th>
               <th>GG</th>
               <th>% Avanzamento</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="progetto in projects" :key="progetto.id">
+              <td>
+                <button @click="editProject(progetto.id)">Modifica Progetto</button>
+              </td>
               <td>{{ progetto.commessa }}</td>
               <td>{{ progetto.idIntervento }}</td>
               <td>{{ progetto.stato }}</td>
@@ -62,7 +67,9 @@
               <td>{{ progetto.trimestre }}</td>
               <td>{{ progetto.dataInizio }}</td>
               <td>{{ progetto.dataFine }}</td>
-              <td>{{ progetto.inLavorazione }}</td>
+              <td>
+                <input type="checkbox" v-model="progetto.inLavorazione" @click="editLavorazione(progetto.id)"/>
+              </td>
               <td>{{ progetto.gg }}</td>
               <td>{{ progetto.percentualeAvanzamento }}</td>
             </tr>
@@ -71,13 +78,13 @@
       </div>
     </div>
   </div>
-  <Footer></Footer>
 </template>
+<Footer></Footer>
 
 <script>
 import mongoose from "mongoose";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 export default {
   name: "Dashboard",
@@ -94,7 +101,7 @@ export default {
       team: "",
       nucleo: "",
       operatore: "",
-      statoIntervento: "",
+      statoIntervento: ""
     };
   },
   mounted() {
@@ -118,6 +125,38 @@ export default {
         }
       });
     },
+    editProject(id) {
+      this.$router.push({ name: "EditProject", params: { id: id } });
+    },
+    editLavorazione(id) {
+      const projectData = {
+        inLavorazione: this.inLavorazione
+      };
+
+      // Opzioni di configurazione della richiesta
+      const projectOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(projectData),
+      };
+
+      // Effettua la chiamata API al percorso '/api/login'
+      axios.post('http://localhost:3000/projects/'+ id, projectOptions)
+        .then(response => {
+          console.log('response: ', response);
+        })
+        .then(data => {
+          // La richiesta è stata eseguita con successo
+          console.log('data:', data);
+          console.log('Chiamata POST riuscita:', response.data);
+          // Esegui le azioni necessarie in caso di successo
+        })
+        .catch(error => {
+          // Si è verificato un errore durante la richiesta
+          console.log(error);
+          // Esegui le azioni necessarie in caso di errore
+        });
+    }
   },
 };
 </script>

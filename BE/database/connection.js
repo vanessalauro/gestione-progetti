@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
-const Project = require('../models/Project');
-const Document = require('../models/document');
-const User = require('../models/User');
 
 // Definisci l'URL di connessione al tuo database MongoDB
-const dbURL = 'mongodb://localhost:27017/gestione-progetti';
+const dbURL = 'mongodb://localhost:27017/my-mongodb';
 
 // Connetti il tuo server MongoDB
 mongoose.connect(dbURL, {
