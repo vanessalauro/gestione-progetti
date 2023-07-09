@@ -19,6 +19,10 @@ const routes = [
   },
   {
     path: "/",
+    redirect: "/dashbord"
+  },
+  {
+    path: "/dashbord",
     name: "Dashboard",
     component: Dashboard,
     meta: {

@@ -23,7 +23,7 @@ export default {
     },
     mounted() {
         // Get the list of projects from the database
-        this.getProjects();
+        // this.getProjects();
     },
     methods: {
         getProjects() {
@@ -56,7 +56,7 @@ export default {
             // Add the new project to the database
             // TODO: Implement this code
 
-            mongoose.connect("mongodb://localhost:27017/my-database");
+            mongoose.connect("mongodb://localhost:27017/gestione-progetti-db");
 
             const projectsCollection = mongoose.model("Projects");
 

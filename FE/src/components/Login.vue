@@ -15,6 +15,7 @@
       </form>
     </div>
   </div>
+  <Alert />
 </template>
 
 <script>
@@ -51,11 +52,13 @@ export default {
           // La richiesta è stata eseguita con successo
           console.log('data:', data);
           console.log('Chiamata POST riuscita:', response.data);
+          this.$refs.alert.showSuccess('Accesso effettuato con successo');
           // Esegui le azioni necessarie in caso di successo
         })
         .catch(error => {
           // Si è verificato un errore durante la richiesta
           console.log(error);
+          this.$refs.alert.showError('Si è verificato un errore durante la richiesta');
           // Esegui le azioni necessarie in caso di errore
         });
     }

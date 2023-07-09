@@ -1,0 +1,24 @@
+{
+    "project": [
+        {
+            "id": 1,
+            "projectNumber": "P001",
+            "interventionId": "I001",
+            "quarter": "Q1",
+            "team": "Team 1",
+            "nucleo": "Nucleus 1",
+            "operator": "Operator 1",
+            "status": "In Progress"
+        },
+        {
+            "id": 2,
+            "projectNumber": "P002",
+            "interventionId": "I002",
+            "quarter": "Q2",
+            "team": "Team 2",
+            "nucleo": "Nucleus 2",
+            "operator": "Operator 2",
+            "status": "Completed"
+        }
+    ]
+}

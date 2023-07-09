@@ -22,6 +22,14 @@ const userSchema = new mongoose.Schema({
   team: {
     type: String,
     required: true
+  },
+  admin: {
+    type: Boolean,
+    required: true
+  },
+  manager: {
+    type: Boolean,
+    required: true
   }
 });
 

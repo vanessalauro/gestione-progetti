@@ -37,7 +37,7 @@ export default {
         updateProject() {
 
             // Connect to the MongoDB database
-            mongoose.connect("mongodb://localhost:27017/my-database");
+            mongoose.connect("mongodb://localhost:27017/gestione-progetti-db");
 
             // Get the project ID from the URL
             const projectId = this.$route.params.id;
