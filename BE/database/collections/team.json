@@ -1,0 +1,16 @@
+{
+    "team": [
+        {
+            "numeroTeam": 1,
+            "nomeTeam": "Team 1"
+        },
+        {
+            "numeroTeam": 2,
+            "nomeTeam": "Team 2"
+        },
+        {
+            "numeroTeam": 3,
+            "nomeTeam": "Team 3"
+        }
+    ]
+}

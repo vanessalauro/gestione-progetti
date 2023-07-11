@@ -6,7 +6,7 @@ class ProjectService {
     this.projectModel = Project;
   }
 
-  async getAllProjects() {
+  async getAllProjects(campi) {
     return await this.projectModel.find().sort({ createdAt: -1 });
   }
 
@@ -29,4 +29,4 @@ class ProjectService {
   }
 }
 
-module.exports = ProjectService;
+module.exports = new ProjectService();

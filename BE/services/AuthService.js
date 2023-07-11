@@ -1,37 +1,36 @@
 // AuthService.js
 const mongoose = require("mongoose");
 const User = require("../models/User");
-const jwt = require('jsonwebtoken');
 
 
 class AuthService {
   constructor() {
-    this.userModel = mongoose.model("users", User);
+    this.userModel = mongoose.model("utenti", User);
   }
 
   async login(username, password) {
-    console.log(username);
-    const user = await this.userModel.findOne({ username });
-    
-    if (user && user.comparePassword(password)) {
-      // Le credenziali sono valide, restituisci l'utente
-      return user;
+    console.log('username:' , username);
+    // const user = await this.userModel.findOne({ "user.username" : username });
+    const user = await this.userModel.findOne({ "username": username });
+    console.log('user:', user);
+    if (user) {
+      // Il documento è stato trovato
+      console.log('Utente trovato:', user);
+      const userFound = {
+        id: user.id,
+        username: user.username,
+        password: user.password,
+        operator: user.operator,
+        nucleo: user.nucleo,
+        team: user.team,
+        admin: user.admin
+      }
+      return userFound;
     } else {
-      // Le credenziali sono invalide, restituisci null
+      // Nessun documento trovato
+      console.log('Nessun utente trovato');
       return null;
     }
-  }
-
-  static generateAccessToken(user) {
-
-    const generateToken = (payload, secret, expiresIn) => {
-      return jwt.sign(payload, secret, { expiresIn });
-    };
-    
-    const secret = 'projectmanagement2023';
-    const token = generateToken(user, secret, '1h');
-
-    return token;
   }
 }
 

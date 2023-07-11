@@ -1,25 +1,11 @@
 const mongoose = require("mongoose");
 
-const commessaSchema = new mongoose.Schema({
-  numeroCommessa: {
-    type: String,
-    required: true
-  },
-  nomeCommessa: {
-    type: String,
-    required: true
-  }
-});
-
-const Commessa = mongoose.model('Commessa', commessaSchema);
-
-module.exports = Commessa;
-
+// Project
 const projectSchema = new mongoose.Schema({
-  commessa: {
+  /*commessa: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Commessa'
-  },
+  },*/
   idIntervento: {
     type: String,
     required: true
@@ -28,18 +14,18 @@ const projectSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  team: {
-    type: String,
-    required: true
-  },
-  nucleo: {
-    type: String,
-    required: true
-  },
-  operatore: {
+  /*team: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Team'
+  },*/
+  /*nucleo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Nucleo'
+  },*/
+  /*operatore: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Operatore'
-  },
+  },*/
   stima: {
     type: String,
     required: true

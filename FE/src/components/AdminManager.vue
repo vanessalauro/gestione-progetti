@@ -28,7 +28,7 @@ export default {
     methods: {
         getProjects() {
             // Connect to the MongoDB database
-            mongoose.connect("mongodb://localhost:27017/gestione-progetti-db");
+            mongoose.connect("mongodb://127.0.0.1:27017/gestione-progetti?autoDiscover=false");
 
             // Get the projects collection
             const projectsCollection = mongoose.model("Projects");
@@ -56,7 +56,7 @@ export default {
             // Add the new project to the database
             // TODO: Implement this code
 
-            mongoose.connect("mongodb://localhost:27017/gestione-progetti-db");
+            mongoose.connect("mongodb://127.0.0.1:27017/gestione-progetti?autoDiscover=false");
 
             const projectsCollection = mongoose.model("Projects");
 

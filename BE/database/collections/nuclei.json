@@ -1,0 +1,16 @@
+{
+    "nuclei": [
+        {
+            "numeroNucleo": 1,
+            "nomeNucleo": "Nucleo 1"
+        },
+        {
+            "numeroNucleo": 2,
+            "nomeNucleo": "Nucleo 2"
+        },
+        {
+            "numeroNucleo": 3,
+            "nomeNucleo": "Nucleo 3"
+        }
+    ]
+}

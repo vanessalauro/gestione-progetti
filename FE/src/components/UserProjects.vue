@@ -27,7 +27,7 @@
     methods: {
       getProjects() {
         // TODO: Implement a method to get the list of projects from the database
-        mongoose.connect("mongodb://localhost:27017/gestione-progetti-db");
+        mongoose.connect("mongodb://127.0.0.1:27017/gestione-progetti?autoDiscover=false");
   
         const projectsCollection = mongoose.model("Projects");
   

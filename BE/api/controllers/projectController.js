@@ -5,7 +5,8 @@ const router = express.Router();
 
 const projectController = {
   getAllProjects(req, res) {
-    ProjectService.getAllProjects()
+    const campi = {...req.query};
+    ProjectService.getAllProjects(campi)
       .then((projects) => {
         res.status(200).json(projects);
       })

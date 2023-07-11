@@ -22,7 +22,7 @@ Questo è un progetto di gestione di progetti che consente di organizzare e tene
 2. Naviga nella cartella del progetto: `cd gestione-progetti`.
 3. Installa le dipendenze: `npm install`.
 4. Avvia l'applicazione: `npm start`.
-5. Apri il browser e vai all'indirizzo: `http://localhost:3000`.
+5. Apri il browser e vai all'indirizzo: `http://localhost:8080`.
 
 ## Tecnologie Utilizzate
 

@@ -1,0 +1,16 @@
+{
+    "operatori": [
+        {
+            "numeroOperatore": 1,
+            "nomeOperatore": "Operatore1"
+        },
+        {
+            "numeroOperatore": 2,
+            "nomeOperatore": "Operatore2"
+        },
+        {
+            "numeroOperatore": 3,
+            "nomeOperatore": "Operatore3"
+        }
+    ]
+}

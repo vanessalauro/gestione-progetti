@@ -15,7 +15,7 @@
       </form>
     </div>
   </div>
-  <Alert />
+  <!--<Alert />-->
 </template>
 
 <script>
@@ -36,6 +36,8 @@ export default {
         password: this.password,
       };
 
+      console.log(userData);
+
       // Opzioni di configurazione della richiesta
       const requestOptions = {
         method: 'POST',
@@ -44,22 +46,17 @@ export default {
       };
 
       // Effettua la chiamata API al percorso '/api/login'
-      axios.post('http://localhost:3000/login', requestOptions)
+      axios.post('http://127.0.0.1:3000/login', requestOptions)
         .then(response => {
           console.log('response: ', response);
-        })
-        .then(data => {
-          // La richiesta è stata eseguita con successo
-          console.log('data:', data);
-          console.log('Chiamata POST riuscita:', response.data);
-          this.$refs.alert.showSuccess('Accesso effettuato con successo');
-          // Esegui le azioni necessarie in caso di successo
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('username', userData.username);
+          localStorage.setItem('password', userData.password);
+          this.$router.push('/dashboard');
         })
         .catch(error => {
           // Si è verificato un errore durante la richiesta
           console.log(error);
-          this.$refs.alert.showError('Si è verificato un errore durante la richiesta');
-          // Esegui le azioni necessarie in caso di errore
         });
     }
   }

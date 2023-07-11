@@ -1,7 +1,9 @@
 {
-    "user": [
+    "utenti": [
         {
             "id": 1,
+            "nome": "utente",
+            "cognome": "amministratore",
             "username": "admin",
             "password": "admin",
             "operator": "Operator 1",
@@ -10,6 +12,8 @@
         },
         {
             "id": 2,
+            "nome": "mario",
+            "cognome": "rossi",
             "username": "user2",
             "password": "password2",
             "operator": "Operator 2",

@@ -16,7 +16,7 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <input type="text" id="numeroCommessa" v-model="numeroCommessa" />
+                  <input class="form-control" type="text" id="numeroCommessa" v-model="filters.numeroCommessa" />
                 </div>
               </div>
             </div>
@@ -28,7 +28,7 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <input type="text" id="idIntervento" v-model="idIntervento" />
+                  <input class="form-control" type="text" id="idIntervento" v-model="filters.idIntervento" />
                 </div>
               </div>
             </div>
@@ -40,7 +40,9 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <input type="text" id="trimestre" v-model="trimestre" />
+                  <select class="form-select" id="trimestre" v-model="filters.trimestre">
+                    <option v-for="trim in trimestri" [value]="{{ trim.code }}">{{ trim.value }}</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -52,7 +54,9 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <input type="text" id="team" v-model="team" />
+                  <select class="form-select" id="trimestre" v-model="filters.team">
+                    <option v-for="trim in comboTeam" :value="trim.numeroTeam">{{ trim.nomeTeam }}</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -66,9 +70,9 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <div class="col-md-12">
-                    <input type="text" id="nucleo" v-model="nucleo" />
-                  </div>
+                  <select class="form-select" id="trimestre" v-model="filters.nucleo">
+                    <option v-for="nuc in comboNuclei" :value="nuc.numeroNucleo">{{ nuc.nomeNucleo }}</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -78,10 +82,10 @@
                   <label for="operatore">Operatore</label>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <input type="text" id="operatore" v-model="operatore" />
-                </div>
+              <div class="col-md-12">
+                <select class="form-select" id="trimestre" v-model="filters.operatore">
+                  <option v-for="op in comboOperatori" :value="op.numeroOperatore">{{ op.nomeOperatore }}</option>
+                </select>
               </div>
             </div>
             <div class="col-md-3">
@@ -90,51 +94,19 @@
                   <label for="statoIntervento">Stato Intervento</label>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <input type="text" id="statoIntervento" v-model="statoIntervento" />
-                </div>
+              <div class="col-md-12">
+                <select class="form-select" id="trimestre" v-model="filters.statoIntervento">
+                  <option v-for="state in comboStatiInterventi" :value="state.value">{{ state.label }}</option>
+                </select>
               </div>
             </div>
           </div>
         </div>
         <div class="card-footer">
-          <button type="submit" @click="cercaInterventi">Cerca</button>
+          <button type="submit" @click="cercaInterventi(filters)">Cerca</button>
         </div>
       </div>
     </form>
-    <!--
-      <form @submit="cercaInterventi"> 
-      <div>
-        <label for="numeroCommessa">Numero Commessa</label>
-        <input type="text" id="numeroCommessa" v-model="numeroCommessa" />
-      </div>
-      <div>
-        <label for="idIntervento">ID Intervento</label>
-        <input type="text" id="idIntervento" v-model="idIntervento" />
-      </div>
-      <div>
-        <label for="trimestre">Trimestre</label>
-        <input type="text" id="trimestre" v-model="trimestre" />
-      </div>
-      <div>
-        <label for="team">Team</label>
-        <input type="text" id="team" v-model="team" />
-      </div>
-      <div>
-        <label for="nucleo">Nucleo</label>
-        <input type="text" id="nucleo" v-model="nucleo" />
-      </div>
-      <div>
-        <label for="operatore">Operatore</label>
-        <input type="text" id="operatore" v-model="operatore" />
-      </div>
-      <div>
-        <label for="statoIntervento">Stato Intervento</label>
-        <input type="text" id="statoIntervento" v-model="statoIntervento" />
-      </div>
-      <button type="submit">Cerca</button>
-    </form>-->
     <div class="content mt-3" v-if="viewSearch">
       <div class="card">
         <div class="card-body">
@@ -181,49 +153,6 @@
           </table>
         </div>
       </div>
-      <!--<div class="projects">
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Commessa</th>
-              <th>ID Intervento</th>
-              <th>Stato</th>
-              <th>Stima</th>
-              <th>Effort</th>
-              <th>Operatore</th>
-              <th>Trimestre</th>
-              <th>Data Inizio</th>
-              <th>Data Fine</th>
-              <th>In Lavorazione</th>
-              <th>GG</th>
-              <th>% Avanzamento</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="progetto in projects" :key="progetto.id">
-              <td>
-                <button @click="editProject(progetto.id)">Modifica Progetto</button>
-              </td>
-              <td>{{ progetto.commessa }}</td>
-              <td>{{ progetto.idIntervento }}</td>
-              <td>{{ progetto.stato }}</td>
-              <td>{{ progetto.stima }}</td>
-              <td>{{ progetto.effort }}</td>
-              <td>{{ progetto.operatore }}</td>
-              <td>{{ progetto.trimestre }}</td>
-              <td>{{ progetto.dataInizio }}</td>
-              <td>{{ progetto.dataFine }}</td>
-              <td>
-                <input type="checkbox" v-model="progetto.inLavorazione" @click="editLavorazione(progetto.id)" />
-              </td>
-              <td>{{ progetto.gg }}</td>
-              <td>{{ progetto.percentualeAvanzamento }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>-->
     </div>
   </div>
 </template>
@@ -233,6 +162,7 @@
 import mongoose from "mongoose";
 import Navbar from "../shared/Navbar";
 import Footer from "../shared/Footer";
+import axios from "axios";
 
 export default {
   name: "Dashboard",
@@ -243,37 +173,57 @@ export default {
   data() {
     return {
       projects: [],
-      numeroCommessa: "",
-      idIntervento: "",
-      trimestre: "",
-      team: "",
-      nucleo: "",
-      operatore: "",
-      statoIntervento: "",
-      viewSearch: true
+      comboTrimestri: [],
+      comboNuclei: [],
+      comboTeam: [],
+      comboOperatori: [],
+      comboStatiInterventi: [],
+      filters: {
+        numeroCommessa: "",
+        idIntervento: "",
+        trimestre: "",
+        team: "",
+        nucleo: "",
+        operatore: "",
+        statoIntervento: ""
+      },
+      viewSearch: false
     };
   },
   mounted() {
     // Get the list of projects from the database
     // this.getProjects();
+    this.getComboTeams();
+    //this.getComboNucleo();
+    //this.getComboOperatori();
+    //this.getComboStatiInterventi();
   },
   methods: {
-    cercaInterventi() {
-      // Connect to the MongoDB database
-      mongoose.connect("mongodb://localhost:27017/gestione-progetti-db");
+    cercaInterventi(filters) {
+      const {
+        numeroCommessa,
+        idIntervento,
+        trimestre,
+        team,
+        nucleo,
+        operatore,
+        statoIntervento,
+      } = filters;
 
-      // Get the projects collection
-      const projectsCollection = mongoose.model("Projects");
-
-      // Get the list of projects
-      projectsCollection.find({}, (err, projects) => {
-        if (err) {
-          console.error(err);
-        } else {
-          this.viewSearch = true;
-          this.projects = projects;
+      axios.get("http://localhost:3000/project", {
+        params: {
+          filters
         }
-      });
+      }).then(response => {
+          console.log('Risposta GET:', response.data);
+          this.viewSearch = true;
+          this.projects = response.data;
+          // Esegui le azioni necessarie con i dati ottenuti dalla risposta
+        })
+        .catch(error => {
+          console.log('Errore GET:', error);
+          // Esegui le azioni necessarie in caso di errore
+        });
     },
     editProject(id) {
       this.$router.push({ name: "EditProject", params: { id: id } });
@@ -291,7 +241,7 @@ export default {
       };
 
       // Effettua la chiamata API al percorso '/api/login'
-      axios.post('http://localhost:3000/projects/' + id, projectOptions)
+      axios.post('http://127.0.0.1:3000/project/' + id, projectOptions)
         .then(response => {
           console.log('response: ', response);
         })
@@ -306,8 +256,55 @@ export default {
           console.log(error);
           // Esegui le azioni necessarie in caso di errore
         });
+    },
+    getComboTeams() {
+      axios.get("http://127.0.0.1:3000/teams")
+        .then(response => {
+          console.log('Risposta GET:', response.data);
+          if (response.data.length > 0) {
+            this.comboTeam = response.data;
+          }
+          // this.comboTeam = response.data;
+        })
+        .catch(error => {
+          console.log('Errore GET:', error);
+        })
+    },
+    getComboNucleo() {
+      axios.get("http://127.0.0.1:3000/nucleo")
+        .then(response => {
+          console.log('Risposta GET:', response.data);
+          if (response.data.length > 0) {
+            this.comboNuclei = response.data;
+          }
+          // this.comboNuclei = response.data;
+        })
+        .catch(error => {
+          console.log('Errore GET:', error);
+        })
+    },
+    getComboOperatori() {
+      axios.get("http://127.0.0.1:3000/operatore")
+        .then(response => {
+          console.log('Risposta GET:', response.data);
+          if (response.data.length > 0) {
+            this.comboOperatori = response.data;
+          }
+          // this.comboOperatori = response.data;
+        })
+        .catch(error => {
+          console.log('Errore GET:', error);
+        })
+    },
+    getComboStatiInterventi() {
+      this.comboStatiInterventi = [
+        { value: "In attesa", label: "In attesa" },
+        { value: "In lavorazione", label: "In lavorazione" },
+        { value: "Confermato", label: "Confermato" },
+        { value: "Concluso", label: "Concluso" }
+      ];
     }
-  },
+  }
 };
 </script>
 

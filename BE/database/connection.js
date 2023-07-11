@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Definisci l'URL di connessione al tuo database MongoDB
-const dbURL = 'mongodb://localhost:27017/gestione-progetti-db';
+const dbURL = 'mongodb://127.0.0.1:27017/gestione-progetti';
 
 // Connetti il tuo server MongoDB
 mongoose.connect(dbURL, {

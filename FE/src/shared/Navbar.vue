@@ -2,7 +2,7 @@
   <nav class="navbar">
     <ul class="navbar-left">
       <li><router-link to="/">Home</router-link></li>
-      <li><router-link to="/projects">Projects</router-link></li>
+      <li><router-link to="/project">Projects</router-link></li>
       <!-- Aggiungi altre pagine qui -->
     </ul>
     <ul class="navbar-right">
