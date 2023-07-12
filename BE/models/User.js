@@ -31,6 +31,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: true
   }
-});
+}, { collection: "user" });
 
 module.exports = userSchema;

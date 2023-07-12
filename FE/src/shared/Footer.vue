@@ -60,7 +60,7 @@ export default {
 .footer-text {
   text-align: center;
   margin-top: 10px;
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
 }
 </style>

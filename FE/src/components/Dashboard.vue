@@ -1,5 +1,6 @@
 <!--<Navbar></Navbar>-->
 <template>
+  <Navbar></Navbar>
   <div id="dashboard" class="align-items-start">
     <form>
       <div class="card mt-3">
@@ -16,7 +17,8 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <input class="form-control" type="text" id="numeroCommessa" v-model="filters.numeroCommessa" />
+                  <input class="form-control form-control-sm" type="text" id="numeroCommessa"
+                    v-model="filters.numeroCommessa" />
                 </div>
               </div>
             </div>
@@ -28,7 +30,8 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <input class="form-control" type="text" id="idIntervento" v-model="filters.idIntervento" />
+                  <input class="form-control form-control-sm" type="text" id="idIntervento"
+                    v-model="filters.idIntervento" />
                 </div>
               </div>
             </div>
@@ -40,7 +43,7 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <select class="form-select" id="trimestre" v-model="filters.trimestre">
+                  <select class="form-select form-control-sm" id="trimestre" v-model="filters.trimestre">
                     <option v-for="trim in trimestri" [value]="{{ trim.code }}">{{ trim.value }}</option>
                   </select>
                 </div>
@@ -54,7 +57,7 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <select class="form-select" id="trimestre" v-model="filters.team">
+                  <select class="form-select form-control-sm" id="trimestre" v-model="filters.team">
                     <option v-for="trim in comboTeam" :value="trim.numeroTeam">{{ trim.nomeTeam }}</option>
                   </select>
                 </div>
@@ -70,7 +73,7 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <select class="form-select" id="trimestre" v-model="filters.nucleo">
+                  <select class="form-select form-control-sm" id="trimestre" v-model="filters.nucleo">
                     <option v-for="nuc in comboNuclei" :value="nuc.numeroNucleo">{{ nuc.nomeNucleo }}</option>
                   </select>
                 </div>
@@ -83,7 +86,7 @@
                 </div>
               </div>
               <div class="col-md-12">
-                <select class="form-select" id="trimestre" v-model="filters.operatore">
+                <select class="form-select form-control-sm" id="trimestre" v-model="filters.operatore">
                   <option v-for="op in comboOperatori" :value="op.numeroOperatore">{{ op.nomeOperatore }}</option>
                 </select>
               </div>
@@ -95,7 +98,7 @@
                 </div>
               </div>
               <div class="col-md-12">
-                <select class="form-select" id="trimestre" v-model="filters.statoIntervento">
+                <select class="form-select form-control-sm" id="trimestre" v-model="filters.statoIntervento">
                   <option v-for="state in comboStatiInterventi" :value="state.value">{{ state.label }}</option>
                 </select>
               </div>
@@ -155,11 +158,11 @@
       </div>
     </div>
   </div>
+  <Footer></Footer>
 </template>
 <!--<Footer></Footer>-->
 
 <script>
-import mongoose from "mongoose";
 import Navbar from "../shared/Navbar";
 import Footer from "../shared/Footer";
 import axios from "axios";
@@ -194,9 +197,9 @@ export default {
     // Get the list of projects from the database
     // this.getProjects();
     this.getComboTeams();
-    //this.getComboNucleo();
-    //this.getComboOperatori();
-    //this.getComboStatiInterventi();
+    this.getComboNucleo();
+    this.getComboOperatori();
+    this.getComboStatiInterventi();
   },
   methods: {
     cercaInterventi(filters) {
@@ -215,11 +218,11 @@ export default {
           filters
         }
       }).then(response => {
-          console.log('Risposta GET:', response.data);
-          this.viewSearch = true;
-          this.projects = response.data;
-          // Esegui le azioni necessarie con i dati ottenuti dalla risposta
-        })
+        console.log('Risposta GET:', response.data);
+        this.viewSearch = true;
+        this.projects = response.data;
+        // Esegui le azioni necessarie con i dati ottenuti dalla risposta
+      })
         .catch(error => {
           console.log('Errore GET:', error);
           // Esegui le azioni necessarie in caso di errore
@@ -260,9 +263,9 @@ export default {
     getComboTeams() {
       axios.get("http://127.0.0.1:3000/team")
         .then(response => {
-          console.log('Risposta GET:', response.data);
-          if (response.data.length > 0) {
-            this.comboTeam = response.data;
+          console.log('Risposta GET:', response.data.teams);
+          if (response.data.teams.length > 0) {
+            this.comboTeam = response.data.teams;
           }
           // this.comboTeam = response.data;
         })
@@ -273,9 +276,9 @@ export default {
     getComboNucleo() {
       axios.get("http://127.0.0.1:3000/nucleo")
         .then(response => {
-          console.log('Risposta GET:', response.data);
-          if (response.data.length > 0) {
-            this.comboNuclei = response.data;
+          console.log('Risposta GET:', response.data.nuclei);
+          if (response.data.nuclei.length > 0) {
+            this.comboNuclei = response.data.nuclei;
           }
           // this.comboNuclei = response.data;
         })
@@ -286,9 +289,9 @@ export default {
     getComboOperatori() {
       axios.get("http://127.0.0.1:3000/operatore")
         .then(response => {
-          console.log('Risposta GET:', response.data);
-          if (response.data.length > 0) {
-            this.comboOperatori = response.data;
+          console.log('Risposta GET:', response.data.operatore);
+          if (response.data.operatore.length > 0) {
+            this.comboOperatori = response.data.operatore;
           }
           // this.comboOperatori = response.data;
         })
@@ -313,6 +316,23 @@ export default {
   margin: 0 auto;
   width: 90%;
   height: 100vh;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  /* Aggiungi altri stili personalizzati per la navbar */
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  /* Aggiungi altri stili personalizzati per il footer */
 }
 
 nav {

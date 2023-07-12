@@ -10,7 +10,7 @@ const nucleoSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { collection: "nuclei" });
 
 
 module.exports = nucleoSchema;

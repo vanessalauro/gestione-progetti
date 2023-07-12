@@ -10,6 +10,6 @@ const teamSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { collection: "team" });
 
 module.exports = teamSchema;

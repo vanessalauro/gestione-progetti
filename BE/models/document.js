@@ -7,6 +7,6 @@ const documentSchema = new mongoose.Schema({
   content: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
-});
+}, { collection: 'document' });
 
 module.exports = mongoose.model('Document', documentSchema);

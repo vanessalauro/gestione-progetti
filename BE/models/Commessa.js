@@ -10,6 +10,6 @@ const commessaSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { collection : "commessa" });
 
 module.exports = commessaSchema;

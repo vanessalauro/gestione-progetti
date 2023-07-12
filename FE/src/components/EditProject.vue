@@ -32,7 +32,7 @@ export default {
       modify: this.$route.params.modify
     };
   },
-  mounted: {
+  mounted() {
     this.getDocumentsFromProject(this.projectId)
   },
   components: {
@@ -46,7 +46,7 @@ export default {
         id: this.projectId,
         title: this.projectName,
         description: this.projectDescription,
-        
+
         // ...
       };
 
@@ -85,11 +85,14 @@ export default {
         });
     },
     getDocumentsFromProject(id) {
-        axios.get("http://localhost:3000/documents/${this.projectId}", updatedProject)
+      axios.get("http://localhost:3000/documents/${this.projectId}", updatedProject)
         .then((response) => {
           // La richiesta di aggiornamento è stata eseguita con successo
           console.log("Documenti relativi al progetto trovati:", response.data);
           // Esegui le azioni necessarie in caso di successo
+          if (response.data) {
+            this.documents = response.data;
+          }
         })
         .catch((error) => {
           // Si è verificato un errore durante la richiesta di aggiornamento

@@ -10,6 +10,6 @@ const operatoreSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { collection: "operatori" });
 
 module.exports = operatoreSchema;

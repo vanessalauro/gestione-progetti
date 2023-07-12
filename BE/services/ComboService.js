@@ -43,9 +43,9 @@ class ComboService {
     }
 
     async getAllTeams() {
-        console.log('getAllTeams : ', this.teamModel.find());
+        // console.log('getAllTeams : ', this.teamModel.find());
         const teams = await this.teamModel.find();
-        console.log(teams);
+        // console.log(teams);
         if (teams) {
             return teams;
         } else {

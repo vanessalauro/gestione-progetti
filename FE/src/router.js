@@ -47,14 +47,14 @@ const routes = [
       }
     ]
   },
-  {
+  /*{
     path: "/admin-manager",
     name: "AdminManager",
     component: AdminManager,
     meta: {
       requiresAuth: true // Pagina che richiede autenticazione
     }
-  },
+  },*/
   /*{
     path: "/edit-profile",
     name: "EditProfile",
