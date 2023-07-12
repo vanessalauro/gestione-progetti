@@ -19,16 +19,16 @@ router.route('/project/:id')
     .post((req, res) => projectController.updateProject(req, res));
 
 // combo
-router.route('/teams')
+router.route('/team')
     .get((req, res) => comboController.getAllTeams(req, res));
 
-/*router.route('/nucleo')
+router.route('/nucleo')
     .get((req, res) => comboController.getAllNuclei(req, res));
 
 router.route('/operatore')
     .get((req, res) => comboController.getAllOperatori(req, res));
     
 router.route('/commessa')
-    .get((req, res) => comboController.getAllCommesse(req, res));*/
+    .get((req, res) => comboController.getAllCommesse(req, res));
 
 module.exports = router;

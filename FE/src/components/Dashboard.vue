@@ -258,7 +258,7 @@ export default {
         });
     },
     getComboTeams() {
-      axios.get("http://127.0.0.1:3000/teams")
+      axios.get("http://127.0.0.1:3000/team")
         .then(response => {
           console.log('Risposta GET:', response.data);
           if (response.data.length > 0) {
