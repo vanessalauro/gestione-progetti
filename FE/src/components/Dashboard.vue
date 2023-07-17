@@ -1,54 +1,44 @@
 <!--<Navbar></Navbar>-->
 <template>
   <Navbar></Navbar>
-  <div id="dashboard" class="align-items-start">
+  <div id="dashboard">
     <form>
-      <div class="card mt-3">
-        <div class="card-header align-text-start">
+      <div class="row">
+        <div class="col-sm-12">
           <h4>Ricerca Progetti</h4>
         </div>
+      </div>
+      <div class="card mt-3 mb-3">
         <div class="card-body">
           <div class="row">
-            <div class="col-md-3">
-              <div class="row">
-                <div class="col-md-12">
-                  <label for="numeroCommessa">Numero Commessa</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <input class="form-control form-control-sm" type="text" id="numeroCommessa"
-                    v-model="filters.numeroCommessa" />
-                </div>
-              </div>
+            <div class="col-md-3 mt-2">
+              <input class="form-control" type="text" id="numeroCommessa" placeholder="Numero Commessa"
+                v-model="filters.numeroCommessa" />
             </div>
-            <div class="col-md-3">
-              <div class="row">
-                <div class="col-md-12">
-                  <label for="idIntervento">ID Intervento</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <input class="form-control form-control-sm" type="text" id="idIntervento"
-                    v-model="filters.idIntervento" />
-                </div>
-              </div>
+            <div class="col-md-3 mt-2">
+              <input class="form-control" type="text" id="idIntervento" placeholder="ID Intervento"
+                v-model="filters.idIntervento" />
             </div>
-            <div class="col-md-3">
-              <div class="row">
-                <div class="col-md-12">
-                  <label for="trimestre">Trimestre</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <select class="form-select form-control-sm" id="trimestre" v-model="filters.trimestre">
-                    <option v-for="trim in trimestri" [value]="{{ trim.code }}">{{ trim.value }}</option>
-                  </select>
-                </div>
-              </div>
+            <div class="col-md-3 mt-2">
+              <select class="form-control" id="trimestre" v-model="filters.trimestre">
+                <option value="" disabled selected>Trimestre</option>
+                <option v-for="trim in comboTrimestri" :value="trim.value">{{ trim.label }}</option>
+              </select>
             </div>
+            <div class="col-md-3 mt-2">
+              <select class="form-control" id="operatore" v-model="filters.operatore">
+                <option value="" disabled selected>Operatore</option>
+                <option v-for="op in comboOperatori" :value="op.id">{{ op.nome }} {{ op.cognome }}</option>
+              </select>
+            </div>
+            <div class="col-md-3 mt-2">
+              <select class="form-control" id="statoIntervento" v-model="filters.statoIntervento">
+                <option value="" disabled selected>Stato intervento</option>
+                <option v-for="state in comboStatiInterventi" :value="state.value">{{ state.label }}</option>
+              </select>
+            </div>
+          </div>
+          <!--<div class="row">
             <div class="col-md-3">
               <div class="row">
                 <div class="col-md-12">
@@ -62,10 +52,8 @@
                   </select>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3">
+            </div>-->
+          <!--<div class="col-md-3">
               <div class="row">
                 <div class="col-md-12">
                   <label for="nucleo">Nucleo</label>
@@ -73,44 +61,25 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <select class="form-select form-control-sm" id="trimestre" v-model="filters.nucleo">
+                  <select class="form-select form-control-sm" id="nucleo" v-model="filters.nucleo">
                     <option v-for="nuc in comboNuclei" :value="nuc.numeroNucleo">{{ nuc.nomeNucleo }}</option>
                   </select>
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="row">
-                <div class="col-md-12">
-                  <label for="operatore">Operatore</label>
-                </div>
-              </div>
-              <div class="col-md-12">
-                <select class="form-select form-control-sm" id="trimestre" v-model="filters.operatore">
-                  <option v-for="op in comboOperatori" :value="op.numeroOperatore">{{ op.nomeOperatore }}</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="row">
-                <div class="col-md-12">
-                  <label for="statoIntervento">Stato Intervento</label>
-                </div>
-              </div>
-              <div class="col-md-12">
-                <select class="form-select form-control-sm" id="trimestre" v-model="filters.statoIntervento">
-                  <option v-for="state in comboStatiInterventi" :value="state.value">{{ state.label }}</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          </div>-->
         </div>
-        <div class="card-footer">
-          <button type="submit" @click="cercaInterventi(filters)">Cerca</button>
+        <div class="row">
+          <div class="col-sm-11 d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary mr-2" @click="reset()">Reset</button>
+          </div>
+          <div class="col-sm-1">
+            <button type="submit" class="btn btn-primary" @click="cercaInterventi(filters)">Cerca</button>
+          </div>
         </div>
       </div>
     </form>
-    <div class="content mt-3" v-if="viewSearch">
+    <div class="content mt-3" v-if="projects.length > 0">
       <div class="card">
         <div class="card-body">
           <table class="table table-hover">
@@ -185,48 +154,34 @@ export default {
         numeroCommessa: "",
         idIntervento: "",
         trimestre: "",
-        team: "",
-        nucleo: "",
+        // team: "",
+        // nucleo: "",
         operatore: "",
         statoIntervento: ""
       },
-      viewSearch: false
+      // viewSearch: false
     };
   },
   mounted() {
     // Get the list of projects from the database
     // this.getProjects();
-    this.getComboTeams();
-    this.getComboNucleo();
+    // this.getComboTeams();
+    // this.getComboNucleo();
     this.getComboOperatori();
     this.getComboStatiInterventi();
+    this.getComboTrimestri()
   },
   methods: {
-    cercaInterventi(filters) {
-      const {
-        numeroCommessa,
-        idIntervento,
-        trimestre,
-        team,
-        nucleo,
-        operatore,
-        statoIntervento,
-      } = filters;
-
-      axios.get("http://localhost:3000/project", {
-        params: {
-          filters
-        }
-      }).then(response => {
-        console.log('Risposta GET:', response.data);
-        this.viewSearch = true;
-        this.projects = response.data;
-        // Esegui le azioni necessarie con i dati ottenuti dalla risposta
-      })
-        .catch(error => {
-          console.log('Errore GET:', error);
-          // Esegui le azioni necessarie in caso di errore
-        });
+    async cercaInterventi(filters) {
+      const response = await axios.get("http://localhost:3000/project");
+      console.log('Risposta GET:', response.data.projects);
+      if (response.data.projects.length > 0) {
+        this.projects = response.data.projects;
+        response.preventDefault()
+      } else {
+        this.projects = [];
+        alert("Nessun progetto trovato");
+      }
     },
     editProject(id) {
       this.$router.push({ name: "EditProject", params: { id: id } });
@@ -243,7 +198,6 @@ export default {
         body: JSON.stringify(projectData),
       };
 
-      // Effettua la chiamata API al percorso '/api/login'
       axios.post('http://127.0.0.1:3000/project/' + id, projectOptions)
         .then(response => {
           console.log('response: ', response);
@@ -260,7 +214,7 @@ export default {
           // Esegui le azioni necessarie in caso di errore
         });
     },
-    getComboTeams() {
+    /*getComboTeams() {
       axios.get("http://127.0.0.1:3000/team")
         .then(response => {
           console.log('Risposta GET:', response.data.teams);
@@ -285,19 +239,17 @@ export default {
         .catch(error => {
           console.log('Errore GET:', error);
         })
-    },
-    getComboOperatori() {
-      axios.get("http://127.0.0.1:3000/operatore")
-        .then(response => {
-          console.log('Risposta GET:', response.data.operatore);
-          if (response.data.operatore.length > 0) {
-            this.comboOperatori = response.data.operatore;
-          }
-          // this.comboOperatori = response.data;
-        })
-        .catch(error => {
-          console.log('Errore GET:', error);
-        })
+    },*/
+    async getComboOperatori() {
+      const response = await axios.get("http://127.0.0.1:3000/operatore")
+      // console.log('Risposta GET:', response.data.operatore);
+      if (response.data.operatore.length > 0) {
+        const ope = response.data.operatore.filter(item => !item.admin);
+        this.comboOperatori = ope;
+      } else {
+        this.comboOperatori = [];
+        alert("Nessun progetto trovato");
+      }
     },
     getComboStatiInterventi() {
       this.comboStatiInterventi = [
@@ -306,89 +258,91 @@ export default {
         { value: "Confermato", label: "Confermato" },
         { value: "Concluso", label: "Concluso" }
       ];
+    },
+    getComboTrimestri() {
+      const currentYear = new Date().getFullYear();
+      this.comboTrimestri = [
+        { value: "1", label: '' + currentYear + ' 1T' },
+        { value: "2", label: '' + currentYear + ' 2T' },
+        { value: "3", label: '' + currentYear + ' 3T' },
+        { value: "4", label: '' + currentYear + ' 4T' },
+      ]
     }
   }
 };
 </script>
 
 <style>
-#dashboard {
+.dashboard {
   margin: 0 auto;
-  width: 90%;
-  height: 100vh;
+  width: 1000px;
 }
 
 .navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 999;
-  /* Aggiungi altri stili personalizzati per la navbar */
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
 }
 
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  /* Aggiungi altri stili personalizzati per il footer */
+.navbar li {
+  display: inline-block;
+  padding: 10px 20px;
 }
 
-nav {
-  background-color: #ff0000;
+.navbar li a {
+  color: #000;
+  text-decoration: none;
+}
+
+.navbar li a:hover {
   color: #fff;
+  background-color: #ccc;
+}
+
+.dashboard form {
+  margin: 0 0 20px 0;
+}
+
+.dashboard form input {
+  width: 200px;
   padding: 10px;
-}
-
-.content {
-  margin-top: 10px;
-}
-
-.projects {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.project {
-  margin: 10px;
-}
-
-.project__name {
-  flex-grow: 1;
-}
-
-.project__description {
-  flex-grow: 2;
-}
-
-/* form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}*/
-
-label {
-  margin-bottom: 0.5rem;
-}
-
-input[type="text"] {
-  padding: 0.5rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-bottom: 1rem;
+  color: #ccc;
 }
 
-button[type="submit"] {
-  padding: 0.5rem 1rem;
-  background-color: #007bff;
+.dashboard form input[type="submit"] {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #000;
+  padding: 10px 20px;
+}
+
+.dashboard form input[type="submit"]:hover {
+  background-color: #ccc;
   color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
-button[type="submit"]:hover {
-  background-color: #0069d9;
+.dashboard .results {
+  margin: 0 0 20px 0;
+}
+
+.dashboard .results ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dashboard .results li {
+  border: 1px solid #ccc;
+  margin: 10px 0;
+}
+
+.dashboard .results li a {
+  color: #000;
+  text-decoration: none;
+}
+
+.dashboard .results li a:hover {
+  color: #fff;
+  background-color: #ccc;
 }
 </style>

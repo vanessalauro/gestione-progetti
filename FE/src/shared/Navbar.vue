@@ -2,7 +2,6 @@
   <nav class="navbar">
     <ul class="navbar-left">
       <li><router-link to="/">Home</router-link></li>
-      <li><router-link to="/project">Projects</router-link></li>
       <!-- Aggiungi altre pagine qui -->
     </ul>
     <ul class="navbar-right">
@@ -12,12 +11,18 @@
 </template>
   
 <script>
+import axios from "axios";
+
 export default {
   name: "Navbar",
   methods: {
     logout() {
       // Logica per eseguire il logout dell'utente
       // Puoi implementare qui la tua logica per il logout
+      axios.post("http://localhost:3000/logout").then(() => {
+        // Redirect to the login page
+        this.$router.push("/login");
+      });
     }
   }
 }

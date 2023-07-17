@@ -8,7 +8,7 @@ const comboController = {
         try {
             const teams = await ComboService.getAllTeams();
             if (teams && teams.length > 0) {
-                console.log(teams);
+                // console.log(teams);
                 return res.json({teams: teams});
             } else {
                 console.log('Nessun team trovato nel db');
@@ -23,7 +23,7 @@ const comboController = {
         try {
             const nuclei = await ComboService.getAllNuclei();
             if (nuclei && nuclei.length > 0) {
-                console.log(nuclei);
+                // console.log(nuclei);
                 return res.json({nuclei: nuclei});
             } else {
                 console.log('Nessun nucleo trovato nel db');
@@ -38,7 +38,7 @@ const comboController = {
         try {
             const operatore = await ComboService.getAllOperatori();
             if (operatore && operatore.length > 0) {
-                console.log(operatore);
+                // console.log(operatore);
                 return res.json({operatore: operatore});
             } else {
                 console.log('Nessun operatore trovato nel db');
@@ -53,7 +53,7 @@ const comboController = {
         try {
             const commessa = await ComboService.getAllCommesse();
             if (commessa && commessa.length > 0) {
-                console.log(commessa);
+                // console.log(commessa);
                 return res.json({commessa: commessa});
             } else {
                 console.log('Nessuna commessa trovata nel db');

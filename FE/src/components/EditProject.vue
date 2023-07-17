@@ -113,9 +113,4 @@ export default {
 h1 {
   text-align: center;
 }
-
-input,
-textarea {
-  margin: 10px;
-}
 </style>

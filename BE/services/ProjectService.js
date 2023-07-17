@@ -3,11 +3,17 @@ const Project = require("../models/Project");
 
 class ProjectService {
   constructor() {
-    this.projectModel = Project;
+    this.projectModel = mongoose.model("Project", Project)
   }
 
-  async getAllProjects(campi) {
-    return await this.projectModel.find().sort({ createdAt: -1 });
+  async getAllProjects(/*campi*/) {
+    const projects = await this.projectModel.find();
+    if (projects) {
+      console.log(projects);
+      return projects;
+    } else {
+      return null;
+    }
   }
 
   async getProjectById(id) {

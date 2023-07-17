@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Commessa = require("../models/Commessa");
-const Operatore = require("../models/Operatore");
 const Nucleo = require("../models/Nucleo");
 const Team = require("../models/Team");
+const Operatore = require("../models/User");
 
 class ComboService {
     constructor() {

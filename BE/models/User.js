@@ -2,24 +2,20 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+  nome: {
+    type: String,
+    required: true
+  },
+  cognome: {
+    type: String,
+    required: true
+  },
   username: {
     type: String,
     required: true,
     unique: true
   },
   password: {
-    type: String,
-    required: true
-  },
-  operatore: {
-    type: String,
-    required: true
-  },
-  nucleo: {
-    type: String,
-    required: true
-  },
-  team: {
     type: String,
     required: true
   },
@@ -31,6 +27,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: true
   }
-}, { collection: "user" });
+}, { collection: "utenti" });
 
 module.exports = userSchema;

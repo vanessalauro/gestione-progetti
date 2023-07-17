@@ -14,14 +14,14 @@ const projectSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  team: {
+  /*team: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team'
   },
   nucleo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Nucleo'
-  },
+  },*/
   operatore: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Operatore'
@@ -41,8 +41,6 @@ const projectSchema = new mongoose.Schema({
   },
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() },
-}, { collection: "project" });
+}, { collection: "progetti" });
 
-const Project = mongoose.model("Project", projectSchema);
-
-module.exports = Project;
+module.exports = projectSchema;

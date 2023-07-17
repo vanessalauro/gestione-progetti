@@ -2,15 +2,26 @@ const authController = require('../api/controllers/AuthController');
 const projectController = require('../api/controllers/projectController');
 const comboController = require('../api/controllers/comboController');
 const express = require('express');
+const session = require("express-session");
 const router = express.Router();
+
+router.use(session({
+    secret: 'my-secret',
+    resave: false,
+    saveUninitialized: true
+}));
 
 // login
 router.route('/login')
     .post((req, res) => authController.loginUser(req, res));
+router.route('/register')
+    .post((req, res) => authController.registerUser(req, res));
+router.route('/logout')
+    .post((req, res) => authController.logoutUser(req, res));
 
 // projects
 router.route('/project')
-    .get((req, res) => projectController.getAllProjects(req, res))
+    .get((req, res) => projectController.getProjectsByParams(req, res))
     .post((req, res) => projectController.createProject(req, res));
 router.route('/project/:id')
     .get((req, res) => projectController.getProjectById(req, res))
