@@ -3,9 +3,18 @@
 #app {
   width: 100%;
   font-weight: normal;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  margin: 120px 0px 20px 0px;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   font-family: inherit;
   margin: 10px;
 }
@@ -23,14 +32,20 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+.navbar {
+  background-color: #c1efef;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
 
-  #app {
-    grid-template-columns: 1fr 1fr;
-    width: 100%;
-  }
+.footer {
+  background-color: #c1efef;
+  box-shadow: 2px 1px 9px 0px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary {
+  background-color: #5fcdcd !important;
+}
+
+.btn-secondary {
+  background-color: #ccc !important;
 }

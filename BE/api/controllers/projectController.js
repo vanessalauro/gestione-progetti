@@ -6,9 +6,17 @@ const router = express.Router();
 const projectController = {
   async getProjectsByParams(req, res) {
     try {
-      const projects = await ProjectService.getAllProjects();
+      const idIntervento = req.query.idIntervento;
+      const numeroCommessa = req.query.numeroCommessa;
+      const trimestre = req.query.trimestre;
+      const operatore = req.query.operatore;
+      const statoIntervento = req.query.statoIntervento;
+
+      // console.log('req.query : ', req.query);
+
+      const projects = await ProjectService.getProjects(idIntervento, numeroCommessa, trimestre, operatore, statoIntervento);
       if (projects && projects.length > 0) {
-        // console.log(projects);
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
         return res.json({ projects: projects });
       } else {
         console.log('Nessun project trovato nel db');

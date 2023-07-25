@@ -1,14 +1,12 @@
-<!--<Navbar></Navbar>-->
 <template>
-  <Navbar></Navbar>
-  <div id="dashboard">
+  <div class="dashboard">
     <form>
       <div class="row">
         <div class="col-sm-12">
           <h4>Ricerca Progetti</h4>
         </div>
       </div>
-      <div class="card mt-3 mb-3">
+      <div class="card mt-3 mb-3 p-3">
         <div class="card-body">
           <div class="row">
             <div class="col-md-3 mt-2">
@@ -73,7 +71,7 @@
           <div class="col-sm-11 d-flex justify-content-end">
             <button type="button" class="btn btn-secondary mr-2" @click="reset()">Reset</button>
           </div>
-          <div class="col-sm-1">
+          <div class="col-sm-1 p-0">
             <button type="submit" class="btn btn-primary" @click="cercaInterventi(filters)">Cerca</button>
           </div>
         </div>
@@ -108,17 +106,17 @@
                 </td>
                 <td>{{ progetto.commessa }}</td>
                 <td>{{ progetto.idIntervento }}</td>
-                <td>{{ progetto.stato }}</td>
+                <td>{{ progetto.statoIntervento }}</td>
                 <td>{{ progetto.stima }}</td>
                 <td>{{ progetto.effort }}</td>
                 <td>{{ progetto.operatore }}</td>
                 <td>{{ progetto.trimestre }}</td>
-                <td>{{ progetto.dataInizio }}</td>
-                <td>{{ progetto.dataFine }}</td>
+                <td>{{ progetto.dataInizio | date }}</td>
+                <td>{{ progetto.dataFine | date }}</td>
                 <td>
                   <input type="checkbox" v-model="progetto.inLavorazione" @click="editLavorazione(progetto.id)" />
                 </td>
-                <td>{{ progetto.gg }}</td>
+                <td>{{ progetto.giorniRapportini }}</td>
                 <td>{{ progetto.percentualeAvanzamento }}</td>
               </tr>
             </tbody>
@@ -127,21 +125,13 @@
       </div>
     </div>
   </div>
-  <Footer></Footer>
 </template>
-<!--<Footer></Footer>-->
 
 <script>
-import Navbar from "../shared/Navbar";
-import Footer from "../shared/Footer";
 import axios from "axios";
 
 export default {
   name: "Dashboard",
-  components: {
-    Navbar,
-    Footer,
-  },
   data() {
     return {
       projects: [],
@@ -163,25 +153,34 @@ export default {
     };
   },
   mounted() {
-    // Get the list of projects from the database
-    // this.getProjects();
-    // this.getComboTeams();
-    // this.getComboNucleo();
     this.getComboOperatori();
     this.getComboStatiInterventi();
-    this.getComboTrimestri()
+    this.getComboTrimestri();
   },
   methods: {
-    async cercaInterventi(filters) {
-      const response = await axios.get("http://localhost:3000/project");
-      console.log('Risposta GET:', response.data.projects);
-      if (response.data.projects.length > 0) {
+    cercaInterventi(filters) {
+      event.preventDefault()
+      return axios.get("http://localhost:3000/project", { params: filters }).then(response => {
+        console.log('Risposta GET:', response.data);
         this.projects = response.data.projects;
-        response.preventDefault()
+        window.onbeforeunload = null;
+      });
+      /*if (response.data.projects.length > 0) {
+        this.projects = response.data.projects;
+        // response.preventDefault()
       } else {
         this.projects = [];
         alert("Nessun progetto trovato");
-      }
+      }*/
+    },
+    reset() {
+      this.filters = {
+        numeroCommessa: "",
+        idIntervento: "",
+        trimestre: "",
+        operatore: "",
+        statoIntervento: ""
+      };
     },
     editProject(id) {
       this.$router.push({ name: "EditProject", params: { id: id } });
@@ -273,38 +272,16 @@ export default {
 </script>
 
 <style>
-.dashboard {
-  margin: 0 auto;
-  width: 1000px;
+.dashboard, .content {
+  width: 100%;
 }
 
-.navbar {
-  background-color: #fff;
-  border-bottom: 1px solid #ccc;
-}
-
-.navbar li {
-  display: inline-block;
-  padding: 10px 20px;
-}
-
-.navbar li a {
-  color: #000;
-  text-decoration: none;
-}
-
-.navbar li a:hover {
-  color: #fff;
-  background-color: #ccc;
-}
-
-.dashboard form {
-  margin: 0 0 20px 0;
+.dashboard form, .content {
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 .dashboard form input {
-  width: 200px;
-  padding: 10px;
   border: 1px solid #ccc;
   color: #ccc;
 }

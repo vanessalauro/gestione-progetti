@@ -5,7 +5,11 @@
       <!-- Aggiungi altre pagine qui -->
     </ul>
     <ul class="navbar-right">
-      <li><button @click="logout">Logout</button></li>
+      <li>
+        <button @click="logout" class="btn btn-danger btn-lg">
+          <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
+        </button>
+      </li>
     </ul>
   </nav>
 </template>
@@ -33,8 +37,12 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f2f2f2;
-  padding: 10px;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
 }
 
 .navbar ul {
@@ -51,5 +59,20 @@ export default {
 
 .navbar-right {
   margin-left: auto;
+}
+
+.navbar li {
+  display: inline-block;
+  padding: 10px 20px;
+}
+
+.navbar li a {
+  color: #000;
+  text-decoration: none;
+}
+
+.navbar li a:hover {
+  color: #fff;
+  background-color: #ccc;
 }
 </style>
