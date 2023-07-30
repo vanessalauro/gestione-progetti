@@ -31,28 +31,33 @@ class ProjectService {
       query = query.where("statoIntervento", "like", `%${statoIntervento}%`);
     }
 
-    const projects = await query.exec();
+    const projects = await query
+      .populate("operatore")
+      .populate("commessa")
+      .exec();
+
+    console.log(projects);
 
     return projects;
   }
 
   async getProjectById(id) {
-  return await this.projectModel.findById(id);
-}
+    return await this.projectModel.findById(id);
+  }
 
   async createProject(project) {
-  return await this.projectModel.create(project);
-}
+    return await this.projectModel.create(project);
+  }
 
-  async updateProject(id, project) {
-  return await this.projectModel.findByIdAndUpdate(id, project, {
-    new: true,
-  });
-}
+  async updateProject(idIntervento, updateData) {
+    return await this.projectModel.findByIdAndUpdate({idIntervento}, updateData, {
+      new: true,
+    });
+  }
 
   async deleteProject(id) {
-  return await this.projectModel.deleteOne({ _id: id });
-}
+    return await this.projectModel.deleteOne({ _id: id });
+  }
 }
 
 module.exports = new ProjectService();

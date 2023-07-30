@@ -77,47 +77,74 @@
         </div>
       </div>
     </form>
-    <div class="content mt-3" v-if="projects.length > 0">
-      <div class="card">
+    <div class="content mt-3">
+      <div class="card" style="min-height: 210px;">
         <div class="card-body">
-          <table class="table table-hover">
+          <div class="row">
+            <div class="col-sm-12">
+              <button type="button" class="icon-button" @click="showModalInsert">
+                <i class="mdi mdi-plus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="row m-auto p-5 text-center" v-if="loading">
+            <div class="col-sm-12">
+              <i class="mdi mdi-loading mdi-spin mdi-48px"></i>
+            </div>
+          </div>
+          <div class="row m-auto p-5 text-center" v-if="!loading && projects.length <= 0">
+            <div class="col-sm-12">
+              <p>Nessun progetto trovato</p>
+            </div>
+          </div>
+          <table class="table table-hover text-center" v-if="!loading && projects.length > 0">
             <thead>
               <tr>
-                <th scope="col"></th>
-                <th scope="col">Commessa</th>
-                <th scope="col">ID Intervento</th>
-                <th scope="col">Stato</th>
-                <th scope="col">Stima</th>
-                <th scope="col">Effort</th>
-                <th scope="col">Operatore</th>
-                <th scope="col">Trimestre</th>
-                <th scope="col">Data Inizio</th>
-                <th scope="col">Data Fine</th>
-                <th scope="col">In Lavorazione</th>
-                <th scope="col">GG</th>
-                <th scope="col">% Avanzamento</th>
-                <th scope="col"></th>
+                <th scope="col" class="table-header"></th>
+                <th scope="col" class="table-header">Commessa</th>
+                <th scope="col" class="table-header">ID Intervento</th>
+                <th scope="col" class="table-header">Stato</th>
+                <th scope="col" class="table-header">Stima</th>
+                <th scope="col" class="table-header">Effort</th>
+                <th scope="col" class="table-header">Operatore</th>
+                <th scope="col" class="table-header">Trimestre</th>
+                <th scope="col" class="table-header">Data Inizio</th>
+                <th scope="col" class="table-header">Data Fine</th>
+                <th scope="col" class="table-header">In Lavorazione</th>
+                <th scope="col" class="table-header">GG</th>
+                <th scope="col" class="table-header">% Avanzamento</th>
+                <th scope="col" class="table-header"></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="progetto in projects" :key="progetto.id">
                 <td>
-                  <button @click="editProject(progetto.id)">Modifica Progetto</button>
+                  <button class="icon-button" @click="editProject(progetto.id)">
+                    <i class="mdi mdi-pencil"></i>
+                  </button>
                 </td>
-                <td>{{ progetto.commessa }}</td>
+                <td>{{ progetto.commessa.nomeCommessa }}</td>
                 <td>{{ progetto.idIntervento }}</td>
                 <td>{{ progetto.statoIntervento }}</td>
                 <td>{{ progetto.stima }}</td>
                 <td>{{ progetto.effort }}</td>
-                <td>{{ progetto.operatore }}</td>
+                <td>{{ progetto.operatore.cognome }} {{ progetto.operatore.nome }}</td>
                 <td>{{ progetto.trimestre }}</td>
-                <td>{{ progetto.dataInizio | date }}</td>
-                <td>{{ progetto.dataFine | date }}</td>
+                <td>{{ formatDate(progetto.dataInizio) }}</td>
+                <td>{{ formatDate(progetto.dataInizio) }}</td>
                 <td>
-                  <input type="checkbox" v-model="progetto.inLavorazione" @click="editLavorazione(progetto.id)" />
+                  <input type="checkbox" v-model="progetto.inLavorazione"
+                  @change="updateLavorazione(progetto)" />
                 </td>
                 <td>{{ progetto.giorniRapportini }}</td>
                 <td>{{ progetto.percentualeAvanzamento }}</td>
+                <td>
+                  <div>
+                    <button class="icon-button" @click="insertProject()">
+                      <i class="mdi mdi-note-outline"></i>
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -125,13 +152,43 @@
       </div>
     </div>
   </div>
+  <!--<EditProject v-show="isModalVisible" @close="closeModalInsert">
+    <template v-slot:header>Nuovo progetto</template>
+
+    <template v-slot:body>
+      <div class="form-group">
+        <label for="projectName">Project name</label>
+        <input type="text" id="projectName"/>
+      </div>
+      <div class="form-group">
+        <label for="projectDescription">Project description</label>
+        <textarea id="projectDescription"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="documents">Documents</label>
+        <document-manager></document-manager>
+      </div>
+    </template>
+
+    <template v-slot:footer>
+      <button @click="updateProject">Update Project</button>
+    </template>
+  </EditProject>-->
 </template>
 
 <script>
 import axios from "axios";
+import moment from "moment";
+import EditProject from "./EditProject.vue";
+import DocumentManager from "./DocumentManager.vue";
+import { toRaw } from 'vue';
 
 export default {
   name: "Dashboard",
+  components: {
+    EditProject,
+    DocumentManager
+  },
   data() {
     return {
       projects: [],
@@ -140,6 +197,7 @@ export default {
       comboTeam: [],
       comboOperatori: [],
       comboStatiInterventi: [],
+      loading: false,
       filters: {
         numeroCommessa: "",
         idIntervento: "",
@@ -149,7 +207,8 @@ export default {
         operatore: "",
         statoIntervento: ""
       },
-      // viewSearch: false
+      inLavorazione: false,
+      isModalVisible: false,
     };
   },
   mounted() {
@@ -159,19 +218,17 @@ export default {
   },
   methods: {
     cercaInterventi(filters) {
-      event.preventDefault()
+      this.loading = true;
+      this.projects = [];
+      event.preventDefault();
       return axios.get("http://localhost:3000/project", { params: filters }).then(response => {
         console.log('Risposta GET:', response.data);
-        this.projects = response.data.projects;
-        window.onbeforeunload = null;
+        setTimeout(() => {
+          this.loading = false;
+          this.projects = response.data.projects;
+          window.onbeforeunload = null;
+        }, 3000);
       });
-      /*if (response.data.projects.length > 0) {
-        this.projects = response.data.projects;
-        // response.preventDefault()
-      } else {
-        this.projects = [];
-        alert("Nessun progetto trovato");
-      }*/
     },
     reset() {
       this.filters = {
@@ -183,29 +240,26 @@ export default {
       };
     },
     editProject(id) {
-      this.$router.push({ name: "EditProject", params: { id: id } });
+
     },
-    editLavorazione(id) {
-      const projectData = {
-        inLavorazione: this.inLavorazione
-      };
+    showModalInsert() {
+      this.isModalVisible = true;
+    },
+    closeModalInsert() {
+      console.log('here');
+      this.isModalVisible = false;
+    },
+    updateLavorazione(progetto) {
+      event.preventDefault();
+      const rawProgetto = toRaw(progetto);
 
-      // Opzioni di configurazione della richiesta
-      const projectOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(projectData),
-      };
-
-      axios.post('http://127.0.0.1:3000/project/' + id, projectOptions)
+      const updateData = {
+        inLavorazione: rawProgetto.inLavorazione
+      }
+      return axios.post(`http://127.0.0.1:3000/project/${rawProgetto.idIntervento}`, updateData)
         .then(response => {
           console.log('response: ', response);
-        })
-        .then(data => {
-          // La richiesta è stata eseguita con successo
-          console.log('data:', data);
-          console.log('Chiamata POST riuscita:', response.data);
-          // Esegui le azioni necessarie in caso di successo
+          
         })
         .catch(error => {
           // Si è verificato un errore durante la richiesta
@@ -266,19 +320,28 @@ export default {
         { value: "3", label: '' + currentYear + ' 3T' },
         { value: "4", label: '' + currentYear + ' 4T' },
       ]
+    },
+    formatDate(date) {
+      return moment(date).format('DD/MM/YYYY'); // Esempio: 01/01/2022
     }
   }
 };
 </script>
 
 <style>
-.dashboard, .content {
+.dashboard {
+  margin: 120px 0px 20px 0px;
+}
+
+.dashboard,
+.content {
   width: 100%;
 }
 
-.dashboard form, .content {
+.dashboard form,
+.content {
   padding-left: 30px;
-  padding-right: 30px;
+  pa: 30px;
 }
 
 .dashboard form input {

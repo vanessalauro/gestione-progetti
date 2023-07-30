@@ -48,16 +48,24 @@ const projectController = {
         res.status(500).json({ error: error });
       });
   },
-  updateProject(req, res) {
-    const id = req.params.id;
-    const project = req.body;
-    ProjectService.updateProject(id, project)
-      .then((project) => {
-        res.status(200).json(project);
-      })
-      .catch((error) => {
-        res.status(500).json({ error: error });
-      });
+  async updateProject(req, res) {
+    try {
+      const idIntervento = req.params.id;
+      const updateData = req.body;
+
+      const updatedProject = await ProjectService.updateProject(idIntervento, updateData);
+
+      if (updatedProject && updatedProject.length > 0) {
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
+        return res.json({ project: updatedProject });
+      } else {
+        console.log('Nessun project trovato nel db');
+        return res.json({ error: 'Errore nel db' });
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   },
   deleteProject(req, res) {
     const id = req.params.id;

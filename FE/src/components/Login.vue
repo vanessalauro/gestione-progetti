@@ -50,6 +50,7 @@ export default {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
       };
+      event.preventDefault();
 
       // Effettua la chiamata API al percorso '/api/login'
       axios.post('http://127.0.0.1:3000/login', requestOptions)
@@ -63,7 +64,7 @@ export default {
           localStorage.setItem('username', userLogged.username);
           localStorage.setItem('password', userLogged.password);
           localStorage.setItem('token', userLogged.token);
-          this.$router.push("/dashboard");
+          this.$router.push("/container/dashboard");
           console.log($router)
         })
         .catch(error => {

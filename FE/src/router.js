@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import UserProjects from "./components/UserProjects";
 import EditProject from "./components/EditProject";
 import Register from "./components/Register";
+import MainContainer from "./components/MainContainer";
 // import EditProfile from "./components/EditProfile";
 // import VueRouter from 'vue-router';
 
@@ -12,9 +13,39 @@ import { createRouter, createWebHistory, RouterLink, RouterView } from 'vue-rout
 const routes = [
   {
     path: "/",
-    redirect: "/dashboard"
+    redirect: "/container"
   },
   {
+    path: "/container",
+    component: MainContainer,
+    children: [
+      {
+        path: "dashboard",
+        name: "Dashboard",
+        component: Dashboard,
+        meta: {
+          requiresAuth: true // Pagina che richiede autenticazione
+        }
+      },
+      {
+        path: "user-projects",
+        name: "UserProjects",
+        component: UserProjects,
+        meta: {
+          requiresAuth: true // Pagina che richiede autenticazione
+        }
+      },
+      {
+        path: "edit-project",
+        name: "EditProject",
+        component: EditProject,
+        meta: {
+          requiresAuth: true // Pagina che richiede autenticazione
+        }
+      }
+    ]
+  },
+  /*{
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
@@ -39,7 +70,7 @@ const routes = [
         }
       },
     ]
-  },
+  },*/
   {
     path: "/login",
     name: "Login",

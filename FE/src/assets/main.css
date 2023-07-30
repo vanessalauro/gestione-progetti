@@ -5,7 +5,6 @@
   font-weight: normal;
   grid-template-columns: 1fr 1fr;
   width: 100%;
-  margin: 120px 0px 20px 0px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -48,4 +47,22 @@ a,
 
 .btn-secondary {
   background-color: #ccc !important;
+}
+
+/* Stile per il bottone con icona */
+.icon-button {
+  background-color: transparent;
+  color: #2196F3;
+  border: none;
+  /*padding: 8px;*/
+  cursor: pointer;
+}
+
+/* Stile per l'icona */
+.icon-button i {
+  font-size: 20px;
+}
+
+.table-header {
+  font-weight: bold;
 }
