@@ -6,7 +6,8 @@ const Commessa = require("./Commessa");
 const projectSchema = new mongoose.Schema({
   idIntervento: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   trimestre: {
     type: String,
@@ -69,7 +70,11 @@ const projectSchema = new mongoose.Schema({
   },*/
   statoIntervento: {
     type: String, 
-    enum: ["In Progress", "Completed", "To Be Tested"],
+    enum: ["Pianificato", "In Lavorazione", "Da Testare", "Completato"],
+    required: true
+  },
+  inLavorazione: {
+    type: Boolean,
     required: true
   },
   dataInizio: {

@@ -36,27 +36,72 @@ class ProjectService {
       .populate("commessa")
       .exec();
 
-    console.log(projects);
+    // console.log(projects);
 
     return projects;
   }
 
-  async getProjectById(id) {
-    return await this.projectModel.findById(id);
+  async updateLavorazione(idIntervento, inLavorazione, statoIntervento) {
+    try {
+      const updatedProject = this.projectModel.findOneAndUpdate(
+        { idIntervento },
+        { inLavorazione, statoIntervento },
+        { new: true } // Opzione per restituire il progetto aggiornato
+      );
+
+      // console.log('updateLavorazione :', updatedProject);
+
+      return updatedProject;
+    } catch (error) {
+      console.log('Errore nell\'aggiornamento del progetto:', error);
+      throw error; // Rilancia l'errore per gestirlo nella funzione chiamante, se necessario
+    }
   }
 
+  /* async getProjectById(id) {
+    return await this.projectModel.findById(id);
+  }*/
+
   async createProject(project) {
-    return await this.projectModel.create(project);
+    try {
+      const insertedProject = this.projectModel.create(project);
+      return insertedProject;
+    } catch (error) {
+      console.log('Errore nell\'aggiornamento del progetto:', error);
+      throw error; // Rilancia l'errore per gestirlo nella funzione chiamante, se necessario
+    }
   }
 
   async updateProject(idIntervento, updateData) {
-    return await this.projectModel.findByIdAndUpdate({idIntervento}, updateData, {
-      new: true,
-    });
+    return await this.projectModel.findOneAndUpdate(
+      { idIntervento },
+      updateData,
+      { new: true }
+    );
   }
 
-  async deleteProject(id) {
-    return await this.projectModel.deleteOne({ _id: id });
+  async deleteProject(idIntervento) {
+    try {
+      const deletedProject = await this.projectModel.deleteOne({ idIntervento: idIntervento });
+      return deletedProject;
+    } catch (error) {
+      console.log('Errore nell\'aggiornamento del progetto:', error);
+      throw error; // Rilancia l'errore per gestirlo nella funzione chiamante, se necessario
+    }
+  }
+
+  async closeIntervento(idIntervento, statoIntervento) {
+    try {
+      const closedProject = await this.projectModel.findOneAndUpdate(
+        { idIntervento },
+        { statoIntervento: statoIntervento },
+        { new: true }
+      );
+      return closedProject;
+    } catch (error) {
+      console.log('Errore nell\'aggiornamento del progetto:', error);
+      throw error; // Rilancia l'errore per gestirlo nella funzione chiamante, se necessario
+    }
   }
 }
 

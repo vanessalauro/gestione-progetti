@@ -18,31 +18,8 @@
                 "numeroCommessa": "1",
                 "nomeCommessa": "Commessa 1"
             },
-            "statoIntervento": "In Progress",
-            "dataInizio": "2022-01-01T00:00:00.000Z",
-            "dataFine": "2022-01-01T00:00:00.000Z",
-            "createdAt": "2022-01-01T00:00:00.000Z",
-            "updatedAt": "2022-01-01T00:00:00.000Z"
-        },
-        {
-            "idIntervento": "I001",
-            "trimestre": "T2",
-            "operatore": {
-                "nome": "mario",
-                "cognome": "rossi",
-                "email": "mario@mail.it",
-                "username": "user2",
-                "password": "password2",
-                "admin": false,
-                "manager": false
-            },
-            "stima": "Stima 1",
-            "effort": "Effort 1",
-            "commessa": {
-                "numeroCommessa": "1",
-                "nomeCommessa": "Commessa 1"
-            },
-            "statoIntervento": "In Progress",
+            "statoIntervento": "In Lavorazione",
+            "inLavorazione": true,
             "dataInizio": "2022-01-01T00:00:00.000Z",
             "dataFine": "2022-01-01T00:00:00.000Z",
             "createdAt": "2022-01-01T00:00:00.000Z",

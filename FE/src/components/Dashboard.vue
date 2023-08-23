@@ -82,7 +82,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-sm-12">
-              <button type="button" class="icon-button" @click="showModalInsert">
+              <button type="button" class="icon-button" @click="showModal(false)">
                 <i class="mdi mdi-plus"></i>
               </button>
             </div>
@@ -92,12 +92,12 @@
               <i class="mdi mdi-loading mdi-spin mdi-48px"></i>
             </div>
           </div>
-          <div class="row m-auto p-5 text-center" v-if="!loading && projects.length <= 0">
+          <div class="row m-auto p-5 text-center" v-if="!loading && (projects && projects.length <= 0)">
             <div class="col-sm-12">
-              <p>Nessun progetto trovato</p>
+              <p>Nessun progetto trovato o nessuna ricerca effettuata</p>
             </div>
           </div>
-          <table class="table table-hover text-center" v-if="!loading && projects.length > 0">
+          <table class="table table-hover text-center" v-if="!loading && (projects && projects.length > 0)">
             <thead>
               <tr>
                 <th scope="col" class="table-header"></th>
@@ -119,9 +119,17 @@
             <tbody>
               <tr v-for="progetto in projects" :key="progetto.id">
                 <td>
-                  <button class="icon-button" @click="editProject(progetto.id)">
-                    <i class="mdi mdi-pencil"></i>
-                  </button>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <button class="icon-button" v-bind:disabled="(progetto.statoIntervento !== 'Pianificato' && progetto.statoIntervento !== 'In lavorazione')" @click="showModal(true, progetto)">
+                        <i class="mdi mdi-pencil"></i>
+                      </button>
+                      <button class="icon-button" v-bind:disabled="(progetto.statoIntervento !== 'Pianificato' && progetto.statoIntervento !== 'In lavorazione')" @click="deleteProject(progetto.idIntervento)">
+                        <i class="mdi mdi-delete"></i>
+                      </button>
+                    </div>
+                  </div>
+
                 </td>
                 <td>{{ progetto.commessa.nomeCommessa }}</td>
                 <td>{{ progetto.idIntervento }}</td>
@@ -133,15 +141,17 @@
                 <td>{{ formatDate(progetto.dataInizio) }}</td>
                 <td>{{ formatDate(progetto.dataInizio) }}</td>
                 <td>
-                  <input type="checkbox" v-model="progetto.inLavorazione"
-                  @change="updateLavorazione(progetto)" />
+                  <input type="checkbox" v-bind:disabled="(progetto.giorniRapportini && progetto.percentualeAvanzamento) || (progetto.statoIntervento !== 'Pianificato' && progetto.statoIntervento !== 'In lavorazione')" v-model="progetto.inLavorazione" @change="updateLavorazione(progetto)" />
                 </td>
                 <td>{{ progetto.giorniRapportini }}</td>
                 <td>{{ progetto.percentualeAvanzamento }}</td>
                 <td>
                   <div>
-                    <button class="icon-button" @click="insertProject()">
+                    <button class="icon-button">
                       <i class="mdi mdi-note-outline"></i>
+                    </button>
+                    <button class="icon-button" @click="closeProject(progetto)">
+                      <i class="mdi mdi-close"></i>
                     </button>
                   </div>
                 </td>
@@ -152,41 +162,99 @@
       </div>
     </div>
   </div>
-  <!--<EditProject v-show="isModalVisible" @close="closeModalInsert">
+  <ModalProject v-show="isCloseProjectModal" @close="closeProjectModal">
+    <template v-slot:header>
+      Chiudi progetto
+    </template>
+    <template v-slot:body>
+      <p>Sei sicuro di voler chiudere questo progetto?</p>
+      <select class="form-control" id="statoIntervento" v-model="reasonState">
+        <option value="" disabled selected>Stato intervento</option>
+        <option v-for="state in comboStatiChiusura" :value="state.value">{{ state.label }}</option>
+      </select>
+    </template>
+    <template v-slot:footer>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeProjectModal">Annulla</button>
+      <button type="button" class="btn btn-primary" @click="updateStatoChiusuraIntervento">Chiudi progetto</button>
+    </template>
+  </ModalProject>
+  <ModalProject v-show="isModalVisible" @close="closeModalInsert">
     <template v-slot:header>Nuovo progetto</template>
 
     <template v-slot:body>
       <div class="form-group">
-        <label for="projectName">Project name</label>
-        <input type="text" id="projectName"/>
+        <input type="text" class="form-control" placeholder="N. Commessa" id="commessa" v-model="modal.commessa" />
+      </div>
+      <!--<div class="form-group">
+        <input type="text" class="form-control" placeholder="Project name" id="projectName" v-model="modal.commessa"/>
+      </div>-->
+      <!--<div class="form-group">
+        <textarea class="form-control" id="projectDescription" placeholder="Project description"></textarea>
+      </div>-->
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Stima" id="stima" v-model="modal.stima" />
+          </div>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" placeholder="Effort" id="effort" v-model="modal.effort" />
+          </div>
+        </div>
       </div>
       <div class="form-group">
-        <label for="projectDescription">Project description</label>
-        <textarea id="projectDescription"></textarea>
+        <div class="row">
+          <div class="col-md-3 mt-2">
+            <select class="form-control" id="trimestre" v-model="modal.trimestre">
+              <option value="" disabled selected>Trimestre</option>
+              <option v-for="trim in comboTrimestri" :value="trim.value">{{ trim.label }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-3 mt-2">
+            <select class="form-control" id="operatore" v-model="modal.operatore">
+              <option value="" disabled selected>Operatore</option>
+              <option v-for="op in comboOperatori" :value="op.id">{{ op.nome }} {{ op.cognome }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-3">
+            <!--<input type="text" class="form-control" placeholder="Data inizio" id="dataInizio"
+              v-model="modal.dataInizio" />-->
+          </div>
+          <div class="col-sm-3">
+            <!--<input type="text" class="form-control" placeholder="Data fine" id="dataFine" v-model="modal.dataFine" />-->
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label for="documents">Documents</label>
-        <document-manager></document-manager>
+        <!--<document-manager></document-manager>-->
       </div>
     </template>
 
     <template v-slot:footer>
-      <button @click="updateProject">Update Project</button>
+      <button @click="editProject()">Update Project</button>
     </template>
-  </EditProject>-->
+  </ModalProject>
 </template>
 
 <script>
 import axios from "axios";
 import moment from "moment";
-import EditProject from "./EditProject.vue";
 import DocumentManager from "./DocumentManager.vue";
+import ModalProject from "../shared/modalProject.vue";
 import { toRaw } from 'vue';
 
 export default {
   name: "Dashboard",
   components: {
-    EditProject,
+    ModalProject,
     DocumentManager
   },
   data() {
@@ -209,6 +277,21 @@ export default {
       },
       inLavorazione: false,
       isModalVisible: false,
+      isCloseProjectModal: false,
+      isUpdateMode: false,
+      updateIdIntervento: "",
+      modal: {
+        commessa: "",
+        stima: "",
+        effort: "",
+        trimestre: "",
+        operatore: "",
+        // dataInizio: "",
+        // dataFine: ""
+      },
+      updateProject: {},
+      closedProject: null,
+      reasonState: ""
     };
   },
   mounted() {
@@ -239,27 +322,167 @@ export default {
         statoIntervento: ""
       };
     },
-    editProject(id) {
-
+    editProject() {
+      this.isModalVisible = false;
+      if (this.updateProject) {
+        // update project
+        const ope = this.comboOperatori.find(op => op.id === this.modal.operatore);
+        return axios.post(`http://127.0.0.1:3000/project`, {
+          idIntervento: this.updateProject.idIntervento,
+          trimestre: this.modal.trimestre,
+          operatore: {
+            nome: ope.nome,
+            cognome: ope.cognome,
+            email: ope.email,
+            username: ope.username,
+            password: ope.password,
+            admin: ope.admin,
+            manager: ope.manager,
+          },
+          stima: this.modal.stima,
+          effort: this.modal.effort,
+          commessa: {
+            numeroCommessa: "1",
+            nomeCommessa: this.modal.commessa
+          }
+        }).then(response => {
+          console.log('response: ', response.data.updateProject);
+          this.model = {
+            commessa: "",
+            stima: "",
+            effort: "",
+            trimestre: "",
+            operatore: "",
+            // dataInizio: "",
+            // dataFine: ""
+          }
+          this.updateProject = null;
+          this.cercaInterventi(this.filters);
+        }).catch(error => {
+          // Si è verificato un errore durante la richiesta
+          console.log(error);
+          // Esegui le azioni necessarie in caso di errore
+        });
+      } else {
+        // insert project
+        const ope = this.comboOperatori.find(op => op.id === this.modal.operatore);
+        return axios.put(`http://127.0.0.1:3000/project`, {
+          idIntervento: "I002",
+          trimestre: this.modal.trimestre,
+          operatore: {
+            nome: ope.nome,
+            cognome: ope.cognome,
+            email: ope.email,
+            username: ope.username,
+            password: ope.password,
+            admin: ope.admin,
+            manager: ope.manager,
+          },
+          stima: this.modal.stima,
+          effort: this.modal.effort,
+          commessa: {
+            numeroCommessa: "1",
+            nomeCommessa: this.modal.commessa
+          },
+          statoIntervento: "Pianificato",
+          inLavorazione: false,
+          // dataInizio: this.modal.dataInizio,
+          // dataFine: this.modal.dataFine
+        }).then(response => {
+          // console.log('response: ', response.data.projects);
+          this.model = {
+            commessa: "",
+            stima: "",
+            effort: "",
+            trimestre: "",
+            operatore: "",
+            // dataInizio: "",
+            // dataFine: ""
+          }
+          this.updateProject = null;
+          this.cercaInterventi(this.filters);
+        }).catch(error => {
+          // Si è verificato un errore durante la richiesta
+          console.log(error);
+          // Esegui le azioni necessarie in caso di errore
+        });
+      }
     },
-    showModalInsert() {
+    deleteProject(idIntervento) {
+      event.preventDefault();
+      // const deleteProject = toRaw(progetto);
+      return axios.post(`http://127.0.0.1:3000/project/delete_project`, {
+        idIntervento
+      }).then(response => {
+        console.log('response: ', response.data.deletedProject);
+        this.cercaInterventi(this.filters);
+      })
+    },
+    showModal(modifica, progetto) {
       this.isModalVisible = true;
+      this.isUpdateMode = modifica;
+      if (progetto) {
+        this.updateProject = toRaw(progetto);
+        this.modal = {
+          commessa: this.updateProject.commessa.nomeCommessa,
+          stima: this.updateProject.stima,
+          effort: this.updateProject.effort,
+          trimestre: this.updateProject.trimestre,
+          operatore: this.updateProject.operatore.id,
+        }
+      }
+    },
+    closeProjectModal() {
+      this.isCloseProjectModal = false;
+    },
+    closeProject(progetto) {
+      this.isCloseProjectModal = true;
+      this.getComboStatiChiusura();
+      this.closedProject = toRaw(progetto);
     },
     closeModalInsert() {
       console.log('here');
       this.isModalVisible = false;
     },
+    updateStatoChiusuraIntervento() {
+      event.preventDefault();
+      this.loading = true;
+      return axios.post(`http://127.0.0.1:3000/project/chiudere_intervento`, {
+        statoIntervento: this.reasonState,
+        idIntervento: this.closedProject.idIntervento
+      }).then(response => {
+        console.log('response: ', response.data.projects);
+        setTimeout(() => {
+            const index = this.projects.indexOf(progetto);
+            this.projects[index].statoIntervento = statoIntervento;
+            // this.projects = response.data.projects;
+            window.onbeforeunload = null;
+            this.closeProjectModal();
+            this.cercaInterventi(this.filters);
+          }, 3000);
+      })
+    },
     updateLavorazione(progetto) {
       event.preventDefault();
+      this.loading = true;
       const rawProgetto = toRaw(progetto);
+      const statoIntervento = (rawProgetto.inLavorazione) ? "In Lavorazione" : "Pianificato";
 
-      const updateData = {
-        inLavorazione: rawProgetto.inLavorazione
-      }
-      return axios.post(`http://127.0.0.1:3000/project/${rawProgetto.idIntervento}`, updateData)
+      return axios.post(`http://127.0.0.1:3000/project/update_lavorazione`, {
+        inLavorazione: rawProgetto.inLavorazione,
+        idIntervento: rawProgetto.idIntervento,
+        statoIntervento: statoIntervento
+      })
         .then(response => {
-          console.log('response: ', response);
-          
+          console.log('response: ', response.data.projects);
+          setTimeout(() => {
+            this.loading = false;
+            const index = this.projects.indexOf(progetto);
+            this.projects[index].statoIntervento = statoIntervento;
+            // this.projects = response.data.projects;
+            window.onbeforeunload = null;
+          }, 3000);
+
         })
         .catch(error => {
           // Si è verificato un errore durante la richiesta
@@ -304,21 +527,29 @@ export default {
         alert("Nessun progetto trovato");
       }
     },
+    getComboStatiChiusura() {
+      this.comboStatiChiusura = [
+        { value: "Chiuso", label: "Chiuso" },
+        { value: "Completato", label: "Completato" },
+        { value: "Da testare", label: "Da testare" }
+      ]
+    },
     getComboStatiInterventi() {
       this.comboStatiInterventi = [
-        { value: "In attesa", label: "In attesa" },
+        { value: "Chiuso", label: "Chiuso" },
+        { value: "Completato", label: "Completato" },
+        { value: "Da testare", label: "Da testare" },
         { value: "In lavorazione", label: "In lavorazione" },
-        { value: "Confermato", label: "Confermato" },
-        { value: "Concluso", label: "Concluso" }
+        { value: "Pianificato", label: "Pianificato" },
       ];
     },
     getComboTrimestri() {
       const currentYear = new Date().getFullYear();
       this.comboTrimestri = [
-        { value: "1", label: '' + currentYear + ' 1T' },
-        { value: "2", label: '' + currentYear + ' 2T' },
-        { value: "3", label: '' + currentYear + ' 3T' },
-        { value: "4", label: '' + currentYear + ' 4T' },
+        { value: "T1", label: '' + currentYear + ' T1' },
+        { value: "T2", label: '' + currentYear + ' T2' },
+        { value: "T3", label: '' + currentYear + ' T3' },
+        { value: "T4", label: '' + currentYear + ' T4' },
       ]
     },
     formatDate(date) {

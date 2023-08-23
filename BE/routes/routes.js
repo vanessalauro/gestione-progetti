@@ -22,12 +22,15 @@ router.route('/logout')
 // projects
 router.route('/project')
     .get((req, res) => projectController.getProjectsByParams(req, res))
-    .post((req, res) => projectController.createProject(req, res));
-router.route('/project/:id')
-    .get((req, res) => projectController.getProjectById(req, res))
-    .put((req, res) => projectController.createProject(req, res))
-    .delete((req, res) => projectController.deleteProject(req, res))
-    .post((req, res) => projectController.updateProject(req, res));
+    .post((req, res) => projectController.updateProject(req, res))
+    .put((req, res) => projectController.createProject(req, res));  
+    // .delete((req, res) => projectController.deleteProject(req, res));
+router.route('/project/update_lavorazione')
+    .post((req, res) => projectController.updateLavorazione(req, res));
+router.route('/project/delete_project')
+    .post((req, res) => projectController.deleteProject(req, res));
+router.route('/project/chiudere_intervento')
+    .post((req, res) => projectController.closeIntervento(req, res));
 
 // combo
 router.route('/team')
@@ -38,7 +41,7 @@ router.route('/nucleo')
 
 router.route('/operatore')
     .get((req, res) => comboController.getAllOperatori(req, res));
-    
+
 router.route('/commessa')
     .get((req, res) => comboController.getAllCommesse(req, res));
 

@@ -27,6 +27,43 @@ const projectController = {
       return;
     }
   },
+  async updateLavorazione(req, res) {
+    try {
+      const { idIntervento, inLavorazione, statoIntervento } = req.body;
+
+      console.log('idIntervento: ', idIntervento, 'inLavorazione: ', inLavorazione, 'statoIntervento: ', statoIntervento);
+
+      const updatedProject = await ProjectService.updateLavorazione(idIntervento, inLavorazione, statoIntervento);
+      if (updatedProject) {
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
+        return res.json({ projects: updatedProject });
+      } else {
+        console.log('Nessun project trovato nel db');
+        return res.json({ error: 'Errore nel db' });
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  },
+  async createProject(req, res) {
+    try {
+      const newProject = req.body;
+
+      console.log('newProject: ', newProject);
+
+      const insertProject = await ProjectService.createProject(newProject);
+      if (insertProject) {
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
+        return res.json({ insertProject: insertProject });
+      } else {
+        return res.json({ error: 'Errore nel db' });
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  },
   getProjectById(req, res) {
     const id = req.params.id;
     ProjectService.getProjectById(id)
@@ -37,29 +74,19 @@ const projectController = {
         res.status(500).json({ error: error });
       });
   },
-  createProject(req, res) {
-    const project = req.body;
-
-    ProjectService.createProject(project)
-      .then((project) => {
-        res.status(201).json(project);
-      })
-      .catch((error) => {
-        res.status(500).json({ error: error });
-      });
-  },
   async updateProject(req, res) {
     try {
-      const idIntervento = req.params.id;
-      const updateData = req.body;
+      const updateProject = req.body;
+      const { idIntervento } = updateProject;
 
-      const updatedProject = await ProjectService.updateProject(idIntervento, updateData);
+      console.log('updateProject: ', updateProject);
+      console.log('idIntervento: ', idIntervento);
 
-      if (updatedProject && updatedProject.length > 0) {
+      const updatedProject = await ProjectService.updateProject(idIntervento, updateProject);
+      if (updatedProject) {
         // console.log('getProjectsByParams : ', res.json({ projects: projects }));
-        return res.json({ project: updatedProject });
+        return res.json({ updateProject: updatedProject });
       } else {
-        console.log('Nessun project trovato nel db');
         return res.json({ error: 'Errore nel db' });
       }
     } catch (error) {
@@ -67,16 +94,39 @@ const projectController = {
       return;
     }
   },
-  deleteProject(req, res) {
-    const id = req.params.id;
-    ProjectService.deleteProject(id)
-      .then((project) => {
-        res.status(200).json(project);
-      })
-      .catch((error) => {
-        res.status(500).json({ error: error });
-      });
+  async deleteProject(req, res) {
+    try {
+      const { idIntervento } = req.body;
+      console.log('idIntervento: ', idIntervento);
+      const deletedProject = await ProjectService.deleteProject(idIntervento);
+      if (deletedProject) {
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
+        return res.json({ deletedProject: deletedProject });
+      } else {
+        return res.json({ error: 'Errore nel db' });  
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   },
+
+  async closeIntervento(req, res) {
+    try {
+      const { idIntervento, statoIntervento } = req.body;
+      console.log('idIntervento: ', idIntervento);
+      const closedProject = await ProjectService.closeIntervento(idIntervento, statoIntervento);
+      if (closedProject) {
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
+        return res.json({ closedProject: closedProject });
+      } else {
+        return res.json({ error: 'Errore nel db' });  
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  }
 }
 
 module.exports = projectController;
