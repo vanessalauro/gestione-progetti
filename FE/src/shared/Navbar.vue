@@ -6,8 +6,8 @@
     </ul>
     <ul class="navbar-right">
       <li>
-        <button @click="logout" class="btn btn-danger btn-lg">
-          <font-awesome-icon :icon="['fas', 'right-from-bracket']" />
+        <button @click="logout" class="btn btn-danger">
+          <i class="mdi mdi-logout"></i>
         </button>
       </li>
     </ul>

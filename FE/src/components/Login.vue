@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <!--<div class="login-container">
     <div class="login-form">
       <h2 class="login-title">Accesso</h2>
       <form>
@@ -17,8 +17,37 @@
         <p class="mt-3">Se non sei ancora registrato, <router-link to="/register">clicca qui</router-link></p>
       </form>
     </div>
-  </div>
+  </div>-->
   <!--<Alert />-->
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">Login</div>
+          <div class="card-body">
+            <form action="/login" method="post">
+              <div class="form-group">
+                <input id="username" v-model="username" class="form-control" type="text" placeholder="Username" />
+                <div class="input-group-append">
+                  <span class="input-group-text"><i class="mdi mdi-user"></i></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <input id="password" v-model="password" class="form-control" type="password" placeholder="Password" />
+                <div class="input-group-append">
+                  <span class="input-group-text"><i class="mdi mdi-lock"></i></span>
+                </div>
+              </div>
+              <div class="form-group">
+                <button @click="login()" :disabled="checkFields()" class="btn btn-primary">Accedi</button>
+                <p class="mt-3">Se non sei ancora registrato, <router-link to="/register">clicca qui</router-link></p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -77,7 +106,7 @@ export default {
 </script>
 
 <style>
-.login-container {
+/*.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,7 +134,7 @@ export default {
 }
 
 label {
-  /*display: block;*/
+  display: block;
   font-weight: bold;
 }
 
@@ -114,5 +143,40 @@ label {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}*/
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  background-color: #f9f9f9;
+  padding: 10px 15px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.form-control {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.input-group {
+  margin-bottom: 10px;
+}
+
+.input-group-append {
+  justify-content: flex-end;
 }
 </style>

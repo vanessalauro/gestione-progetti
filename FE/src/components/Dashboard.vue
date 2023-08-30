@@ -4,9 +4,10 @@
       <div class="row">
         <div class="col-sm-12">
           <h4>Ricerca Progetti</h4>
+          <hr class="mr-5">
         </div>
       </div>
-      <div class="card mt-3 mb-3 p-3">
+      <div class="card mt-3 mb-3 p-3 mr-5">
         <div class="card-body">
           <div class="row">
             <div class="col-md-3 mt-2">
@@ -78,7 +79,7 @@
       </div>
     </form>
     <div class="content mt-3">
-      <div class="card" style="min-height: 210px;">
+      <div class="card mr-5" style="min-height: 210px;">
         <div class="card-body">
           <div class="row">
             <div class="col-sm-12">
@@ -121,10 +122,14 @@
                 <td>
                   <div class="row">
                     <div class="col-sm-12">
-                      <button class="icon-button" v-bind:disabled="(progetto.statoIntervento !== 'Pianificato' && progetto.statoIntervento !== 'In lavorazione')" @click="showModal(true, progetto)">
+                      <button class="icon-button"
+                        v-bind:disabled="(progetto.statoIntervento !== 'Pianificato' && progetto.statoIntervento !== 'In lavorazione')"
+                        @click="showModal(true, progetto)">
                         <i class="mdi mdi-pencil"></i>
                       </button>
-                      <button class="icon-button" v-bind:disabled="(progetto.statoIntervento !== 'Pianificato' && progetto.statoIntervento !== 'In lavorazione')" @click="deleteProject(progetto.idIntervento)">
+                      <button class="icon-button"
+                        v-bind:disabled="(progetto.statoIntervento !== 'Pianificato' && progetto.statoIntervento !== 'In lavorazione')"
+                        @click="deleteProject(progetto.idIntervento)">
                         <i class="mdi mdi-delete"></i>
                       </button>
                     </div>
@@ -141,14 +146,16 @@
                 <td>{{ formatDate(progetto.dataInizio) }}</td>
                 <td>{{ formatDate(progetto.dataInizio) }}</td>
                 <td>
-                  <input type="checkbox" v-bind:disabled="(progetto.giorniRapportini && progetto.percentualeAvanzamento) || (progetto.statoIntervento !== 'Pianificato' && progetto.statoIntervento !== 'In lavorazione')" v-model="progetto.inLavorazione" @change="updateLavorazione(progetto)" />
+                  <input type="checkbox"
+                    v-bind:disabled="(progetto.giorniRapportini && progetto.percentualeAvanzamento) || (progetto.statoIntervento !== 'Pianificato' && progetto.statoIntervento !== 'In lavorazione')"
+                    v-model="progetto.inLavorazione" @change="updateLavorazione(progetto)" />
                 </td>
                 <td>{{ progetto.giorniRapportini }}</td>
                 <td>{{ progetto.percentualeAvanzamento }}</td>
                 <td>
                   <div>
                     <button class="icon-button">
-                      <i class="mdi mdi-note-outline"></i>
+                      <i class="mdi mdi-note-outline" @click="insertUpdateRappotino(progetto)"></i>
                     </button>
                     <button class="icon-button" @click="closeProject(progetto)">
                       <i class="mdi mdi-close"></i>
@@ -162,20 +169,52 @@
       </div>
     </div>
   </div>
+  <ModalProject v-show="isCloseRapportiniModal" @close="closeRapportiniModal()">
+    <template v-slot:header>
+      Rapportini di Sviluppo {{ modalRapportiniProject?.idIntervento }} - {{ modalRapportiniProject?.descrIntervento }}
+    </template>
+    <template v-slot:body>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="sidebar">
+            <ul class="nav nav-tabs" role="tablist">
+              <li v-for="rapportino in modalRapportiniProject.rapportini" :key="rapportino.id"
+                class="nav-item btn-primary">
+                <button class="btn btn-primary" >
+                  {{ rapportino.idRapportino }} - {{ formatDate(rapportino.dataRapportino) }}
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="tab-content">
+            <div>
+              <h6>Informazioni</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+    <template v-slot:footer>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal"
+        @click="closeRapportiniModal()">Annulla</button>
+    </template>
+  </ModalProject>
   <ModalProject v-show="isCloseProjectModal" @close="closeProjectModal">
     <template v-slot:header>
       Chiudi progetto
     </template>
     <template v-slot:body>
-      <p>Sei sicuro di voler chiudere questo progetto?</p>
+      <p>Seleziona lo stato di chiusura</p>
       <select class="form-control" id="statoIntervento" v-model="reasonState">
         <option value="" disabled selected>Stato intervento</option>
         <option v-for="state in comboStatiChiusura" :value="state.value">{{ state.label }}</option>
       </select>
     </template>
     <template v-slot:footer>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeProjectModal">Annulla</button>
-      <button type="button" class="btn btn-primary" @click="updateStatoChiusuraIntervento">Chiudi progetto</button>
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeProjectModal()">Annulla</button>
+      <button type="button" class="btn btn-primary" @click="updateStatoChiusuraIntervento()">Chiudi progetto</button>
     </template>
   </ModalProject>
   <ModalProject v-show="isModalVisible" @close="closeModalInsert">
@@ -291,7 +330,10 @@ export default {
       },
       updateProject: {},
       closedProject: null,
-      reasonState: ""
+      reasonState: "",
+      isCloseRapportiniModal: false,
+      modalRapportiniProject: {},
+      tab: 'option-1'
     };
   },
   mounted() {
@@ -444,6 +486,24 @@ export default {
       console.log('here');
       this.isModalVisible = false;
     },
+    closeRapportiniModal() {
+      this.isCloseRapportiniModal = false;
+    },
+    insertUpdateRappotino(progetto) {
+      this.isCloseRapportiniModal = true;
+      this.modalRapportiniProject = toRaw(progetto);
+    },
+    showReportInfo(projectSelected) {
+
+    },
+    salvaRapportino() {
+      event.preventDefault();
+      this.isCloseRapportiniModal = false;
+      this.loading = true;
+      return axios.post(`http://127.0.0.1:3000/project/salva_rapportino`, {
+
+      })
+    },
     updateStatoChiusuraIntervento() {
       event.preventDefault();
       this.loading = true;
@@ -453,13 +513,13 @@ export default {
       }).then(response => {
         console.log('response: ', response.data.projects);
         setTimeout(() => {
-            const index = this.projects.indexOf(progetto);
-            this.projects[index].statoIntervento = statoIntervento;
-            // this.projects = response.data.projects;
-            window.onbeforeunload = null;
-            this.closeProjectModal();
-            this.cercaInterventi(this.filters);
-          }, 3000);
+          const index = this.projects.indexOf(progetto);
+          this.projects[index].statoIntervento = statoIntervento;
+          // this.projects = response.data.projects;
+          window.onbeforeunload = null;
+          this.closeProjectModal();
+          this.cercaInterventi(this.filters);
+        }, 3000);
       })
     },
     updateLavorazione(progetto) {
@@ -615,5 +675,14 @@ export default {
 .dashboard .results li a:hover {
   color: #fff;
   background-color: #ccc;
+}
+
+.sidebar {
+  width: 200px;
+  height: 500px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 0 10px;
 }
 </style>

@@ -9,10 +9,30 @@ const projectSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  descrIntervento: {
+    type: String,
+    required: true
+  },
   trimestre: {
     type: String,
     required: true
   },
+  rapportini: [
+    {
+      idRapportino: {
+        type: String,
+        required: true
+      },
+      dataRapportino: {
+        type: Date,
+        required: true
+      },
+      descrizioneRapportino: {
+        type: String,
+        required: true
+      }
+    }
+  ],
   operatore: {
     nome: {
       type: String,

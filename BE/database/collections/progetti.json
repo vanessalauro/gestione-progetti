@@ -2,7 +2,15 @@
     "progetti": [
         {
             "idIntervento": "I001",
+            "descrIntervento": "Intervento 1",
             "trimestre": "T2",
+            "rapportini": [
+                {
+                    "idRapportino": "000000",
+                    "dataRapportino": "2022-01-01T00:00:00.000Z",
+                    "descrizioneRapportino": ""
+                }
+            ],
             "operatore": {
                 "nome": "mario",
                 "cognome": "rossi",
