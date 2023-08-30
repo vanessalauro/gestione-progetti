@@ -19,33 +19,54 @@
     </div>
   </div>-->
   <!--<Alert />-->
-  <div class="container">
+  <!--<div class="container-login">
     <div class="row justify-content-center">
       <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">Login</div>
-          <div class="card-body">
+        <div class="card-login">
+          <div class="card-header-login">Login</div>
+          <div class="card-body-login">
             <form action="/login" method="post">
-              <div class="form-group">
-                <input id="username" v-model="username" class="form-control" type="text" placeholder="Username" />
-                <div class="input-group-append">
-                  <span class="input-group-text"><i class="mdi mdi-user"></i></span>
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <span class="input-group-text"><i class="mdi mdi-account"></i></span>
+                  <input id="username" v-model="username" class="form-control" type="text" placeholder="Username" />
                 </div>
               </div>
-              <div class="form-group">
-                <input id="password" v-model="password" class="form-control" type="password" placeholder="Password" />
-                <div class="input-group-append">
+              <div class="form-group row">
+                <div class="col-sm-12">
                   <span class="input-group-text"><i class="mdi mdi-lock"></i></span>
+                  <input id="password" v-model="password" class="form-control" type="password" placeholder="Password" />
                 </div>
               </div>
-              <div class="form-group">
-                <button @click="login()" :disabled="checkFields()" class="btn btn-primary">Accedi</button>
+              <div class="form-group row">
+                <button @click="login()" :disabled="checkFields()" class="btn btn-primary w-100">Accedi</button>
                 <p class="mt-3">Se non sei ancora registrato, <router-link to="/register">clicca qui</router-link></p>
               </div>
             </form>
           </div>
         </div>
       </div>
+    </div>
+  </div>-->
+  <div class="login-container">
+    <div class="login-form">
+      <h2>Login</h2>
+      <form action="/login" method="post">
+        <div class="row mb-2">
+          <div class="col-sm-10 m-auto">
+            <span class="input-group-text"><i class="mdi mdi-account"></i></span>
+            <input id="username" v-model="username" class="form-control" type="text" placeholder="Username" />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-10 m-auto">
+            <span class="input-group-text"><i class="mdi mdi-lock"></i></span>
+            <input id="password" v-model="password" class="form-control" type="password" placeholder="Password" />
+          </div>
+        </div>
+        <button @click="login()" :disabled="checkFields()" class="btn btn-primary w-100">Accedi</button>
+        <p class="mt-3">Se non sei ancora registrato, <router-link to="/register">clicca qui</router-link></p>
+      </form>
     </div>
   </div>
 </template>
@@ -145,38 +166,21 @@ label {
   border-radius: 4px;
 }*/
 
-.container {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ddf4f4;
+    
 }
 
-.card {
-  border-radius: 10px;
-  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
-}
-
-.card-header {
-  background-color: #f9f9f9;
-  padding: 10px 15px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.card-body {
-  padding: 20px;
-}
-
-.form-control {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.input-group {
-  margin-bottom: 10px;
-}
-
-.input-group-append {
-  justify-content: flex-end;
+.login-form {
+    width: 40%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(202, 202, 202, 0.678);
+    text-align: center;
 }
 </style>

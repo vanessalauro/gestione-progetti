@@ -7,7 +7,7 @@
           <hr class="mr-5">
         </div>
       </div>
-      <div class="card mt-3 mb-3 p-3 mr-5">
+      <div class="card light-sky mt-3 mb-3 p-3 mr-5">
         <div class="card-body">
           <div class="row">
             <div class="col-md-3 mt-2">

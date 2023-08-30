@@ -1,6 +1,6 @@
 <template>
     <footer class="footer">
-      <div class="container">
+      <div class="container-footer">
         <div class="footer-text">
           &copy; 2023 Your Company. All rights reserved.
         </div>
@@ -24,7 +24,7 @@ export default {
   z-index: 1000;
 }
 
-.container {
+.container-footer {
   max-width: 1200px;
   margin: 0 auto;
 }

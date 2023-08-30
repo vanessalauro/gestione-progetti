@@ -70,3 +70,7 @@ a,
 .table-header {
   font-weight: bold;
 }
+
+.light-sky { 
+  background-color: #ddf4f4 !important;
+}

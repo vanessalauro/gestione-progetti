@@ -3,38 +3,38 @@
         <div class="register-form">
             <h2>Registrazione</h2>
             <form @submit.prevent="onSubmit">
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-sm-10 m-auto">
                         <input type="text" class="form-control" id="nome" v-model="nome" placeholder="Nome" required />
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-sm-10 m-auto">
                         <input type="text" class="form-control" id="cognome" v-model="cognome" placeholder="Cognome" required />
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-sm-10 m-auto">
                         <input type="text" class="form-control" id="username" v-model="username" placeholder="Username" required />
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-sm-10 m-auto">
                         <input type="email" class="form-control" id="email" v-model="email" placeholder="Email" required />
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-sm-10 m-auto">
                         <input type="password" class="form-control" id="password" v-model="password" placeholder="Password" required />
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-sm-10 m-auto">
                         <input type="password" class="form-control" id="confirmPassword" placeholder="Conferma password" v-model="confirmPassword"
                             required />
                     </div>
                 </div>
-                <button type="submit" :disabled="checkFields()" class="btn btn-primary">Registrati</button>
+                <button type="submit" :disabled="checkFields()" class="btn btn-primary w-100">Registrati</button>
             </form>
         </div>
     </div>
@@ -110,7 +110,7 @@ export default {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f2f2f2;
+    background-color: #ddf4f4;
 }
 
 .register-form {
