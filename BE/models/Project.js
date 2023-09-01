@@ -17,10 +17,15 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  rapportini: [
+  /*rapportini: [
     {
       idRapportino: {
         type: String,
+        required: true
+      },
+      operatore: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // Riferimento al modello "User"
         required: true
       },
       dataRapportino: {
@@ -30,10 +35,14 @@ const projectSchema = new mongoose.Schema({
       descrizioneRapportino: {
         type: String,
         required: true
-      }
+      },
     }
-  ],
-  operatore: {
+  ]*/
+  rapportini: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Rapportino', // Riferimento al modello "User"
+  }],
+  /*operatore: {
     nome: {
       type: String,
       required: true
@@ -59,12 +68,12 @@ const projectSchema = new mongoose.Schema({
       type: Boolean,
       required: true
     }
-  },
-  /*operatore: {
+  },*/
+  operatore: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Riferimento al modello "User"
     required: true
-  },*/
+  },
   stima: {
     type: String,
     required: true
@@ -89,7 +98,7 @@ const projectSchema = new mongoose.Schema({
     required: true
   },*/
   statoIntervento: {
-    type: String, 
+    type: String,
     enum: ["Pianificato", "In Lavorazione", "Da Testare", "Completato"],
     required: true
   },
