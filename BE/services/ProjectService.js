@@ -36,7 +36,7 @@ class ProjectService {
       .populate("commessa")
       .exec();
 
-    // console.log(projects);
+    console.log("progetti: ", projects);
 
     return projects;
   }

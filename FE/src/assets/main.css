@@ -47,16 +47,30 @@ a,
 
 .btn-primary {
   background-color: #5fcdcd !important;
+  color: white !important;
+  border-radius: 10% !important;
+  border: #ccc 1px solid !important;
+}
+
+.btn-primary:hover {
+  color: black !important;
 }
 
 .btn-secondary {
   background-color: #ccc !important;
+  color: white !important;
+  border-radius: 10% !important;
+  border: #ccc 1px solid !important;
+}
+
+.btn-secondary:hover {
+  color: black !important;
 }
 
 /* Stile per il bottone con icona */
 .icon-button {
   background-color: transparent;
-  color: #2196F3;
+  color: #5fcdcd;
   border: none;
   /*padding: 8px;*/
   cursor: pointer;

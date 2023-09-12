@@ -75,11 +75,11 @@ const projectSchema = new mongoose.Schema({
     required: true
   },
   stima: {
-    type: String,
+    type: Number,
     required: true
   },
   effort: {
-    type: String,
+    type: Number,
     required: true
   },
   commessa: {

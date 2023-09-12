@@ -1,17 +1,34 @@
 <template>
-  <nav class="navbar">
-    <ul class="navbar-left">
-      <li><router-link to="/">Home</router-link></li>
-      <!-- Aggiungi altre pagine qui -->
+  <!--<nav class="navbar">
+    <ul class="nav">
+      <li class="nav-item active">
+        <button type="button" class="btn btn-dash" v-bind:class="{ active: true }">Dashboard</button>
+      </li>
     </ul>
-    <ul class="navbar-right">
-      <li>
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <button @click="logout" class="btn btn-danger">
+          <i class="mdi mdi-bell"></i>
+        </button>
+      </li>
+      <li class="nav-item">
         <button @click="logout" class="btn btn-danger">
           <i class="mdi mdi-logout"></i>
         </button>
       </li>
     </ul>
-  </nav>
+  </nav>-->
+  <ul id="section-tabs" class="nav d-md-flex px-3">
+    <li class="nav-item d-flex align-items-center pointer">
+      <span class="nav-link">Dashboard</span>
+    </li>
+    <li class="nav-item d-flex align-items-center pointer">
+      <span class="nav-link">Notifiche</span>
+    </li>
+    <li class="nav-item d-flex align-items-center pointer">
+      <span class="nav-link">Logout</span>
+    </li>
+  </ul> 
 </template>
   
 <script>
@@ -71,8 +88,41 @@ export default {
   text-decoration: none;
 }
 
-.navbar li a:hover {
-  color: #fff;
-  background-color: #ccc;
+.btn-dash {
+  background-color: #c1efef;
+  color: black;
+  border: none;
+  border-radius: 0%;
+  border-bottom: white 3px solid;
+}
+
+#section-tabs {
+  background-image: linear-gradient(to right, #c1efef, #daf3f3);
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 53px;
+  user-select: none;
+
+  .nav-item {
+    color: white;
+    font-weight: bold;
+    
+
+    &.active {
+      border-bottom: 4px solid white;
+    }
+
+    &:hover {
+      background-color: rgba(white, 0.1);
+    }
+  }
+
+  .nav-link {
+    color: black !important;
+  }
 }
 </style>

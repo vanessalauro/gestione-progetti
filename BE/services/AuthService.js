@@ -9,11 +9,11 @@ class AuthService {
   }
 
   async registerUser(record) {
-    console.log("record: ", record);
+    // console.log("record: ", record);
     const user = await this.userModel.findOne({ "username": record.username });
-    console.log('user:', user);
+    // console.log('user:', user);
     if (user) {
-      console.log('Utente trovato:', user);
+      // console.log('Utente trovato:', user);
       return user;
     } else {
       // Nessun documento trovato
@@ -32,13 +32,13 @@ class AuthService {
   }
 
   async login(username, password) {
-    console.log('username:' , username);
+    // console.log('username:' , username);
     // const user = await this.userModel.findOne({ "user.username" : username });
     const user = await this.userModel.findOne({ "username": username });
-    console.log('user:', user);
+    // console.log('user:', user);
     if (user) {
       // Il documento è stato trovato
-      console.log('Utente trovato:', user);
+      // console.log('Utente trovato:', user);
       const userFound = {
         nome: user.nome,
         cognome: user.cognome,
@@ -53,7 +53,7 @@ class AuthService {
       return userFound;
     } else {
       // Nessun documento trovato
-      console.log('Nessun utente trovato');
+      // console.log('Nessun utente trovato');
       return null;
     }
   }

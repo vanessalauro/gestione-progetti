@@ -2,6 +2,7 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Register from "./components/Register";
 import MainContainer from "./components/MainContainer";
+import RapportiniPage from "./components/RapportiniPage";
 // import EditProfile from "./components/EditProfile";
 // import VueRouter from 'vue-router';
 
@@ -41,6 +42,14 @@ const routes = [
         }
       }*/
     ]
+  },
+  {
+    path: "/rapportini",
+    name: "Rapportini",
+    component: RapportiniPage,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/login",

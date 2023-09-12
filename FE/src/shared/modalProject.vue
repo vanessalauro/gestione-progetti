@@ -70,7 +70,7 @@ export default {
 
 .modal-footer {
   border-top: 1px solid #eeeeee;
-  flex-direction: column;
+  /*flex-direction: column;*/
   justify-content: flex-end;
 }
 
