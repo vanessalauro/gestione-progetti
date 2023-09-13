@@ -1,9 +1,58 @@
 const mongoose = require("mongoose");
-const User = require("./User");
-const Commessa = require("./Commessa");
+const userSchema = require("./User");
+const commessaSchema = require("./Commessa");
+/*const nucleoSchema = require("./Nucleo");
+const teamSchema = require("./Team");*/
+const rapportiniSchema = require("./Rapportini");
+
+const progettiSchema = new mongoose.Schema({
+  descrIntervento: {
+    type: String,
+    required: true
+  },
+  trimestre: {
+    type: String,
+    required: true
+  },
+  operatore: {
+    type: userSchema
+  },
+  stima: {
+    type: Number,
+    required: true
+  },
+  effort: {
+    type: Number,
+    required: true
+  },
+  commessa: {
+    type: commessaSchema
+  },
+  statoIntervento: {
+    type: String,
+    enum: ["Pianificato", "In Lavorazione", "Da Testare", "Completato"],
+    required: true
+  },
+  inLavorazione: {
+    type: Boolean,
+    required: true
+  },
+  dataInizio: {
+    type: Date,
+    default: Date.now(),
+    required: true
+  },
+  dataFine: {
+    type: Date,
+    default: Date.now(),
+    required: true
+  },
+  createdAt: { type: Date, default: Date.now() },
+  updatedAt: { type: Date, default: Date.now() },
+}, { collection: "progetti" });
 
 // Project
-const projectSchema = new mongoose.Schema({
+/*const projectSchema = new mongoose.Schema({
   idIntervento: {
     type: String,
     required: true,
@@ -17,7 +66,7 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  /*rapportini: [
+  rapportini: [
     {
       idRapportino: {
         type: String,
@@ -37,12 +86,12 @@ const projectSchema = new mongoose.Schema({
         required: true
       },
     }
-  ]*/
+  ]
   rapportini: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Rapportino', // Riferimento al modello "User"
   }],
-  /*operatore: {
+  operatore: {
     nome: {
       type: String,
       required: true
@@ -68,7 +117,7 @@ const projectSchema = new mongoose.Schema({
       type: Boolean,
       required: true
     }
-  },*/
+  },
   operatore: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Riferimento al modello "User"
@@ -92,11 +141,11 @@ const projectSchema = new mongoose.Schema({
       required: true
     }
   },
-  /*commessa: {
+  commessa: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Commessa', // Riferimento al modello "Commessa"
     required: true
-  },*/
+  },
   statoIntervento: {
     type: String,
     enum: ["Pianificato", "In Lavorazione", "Da Testare", "Completato"],
@@ -118,6 +167,6 @@ const projectSchema = new mongoose.Schema({
   },
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() },
-}, { collection: "progetti" });
+}, { collection: "progetti" });*/
 
 module.exports = projectSchema;

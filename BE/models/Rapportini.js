@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
+const userSchema = require("./User");
+const progettoSchema = require("./Commessa");
 
 // Project
 const rapportiniSchema = new mongoose.Schema({
-    idRapportino: {
-        type: String,
-        required: true
+    progetto: {
+        type: progettoSchema
     },
     operatore: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Riferimento al modello "User"
-        required: true
+        type: userSchema
     },
     dataRapportino: {
         type: Date,
