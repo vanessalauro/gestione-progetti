@@ -3,6 +3,7 @@ import Dashboard from "./components/Dashboard";
 import Register from "./components/Register";
 import MainContainer from "./components/MainContainer";
 import RapportiniPage from "./components/RapportiniPage";
+import Notifiche from "./components/Notifiche";
 // import EditProfile from "./components/EditProfile";
 // import VueRouter from 'vue-router';
 
@@ -25,22 +26,14 @@ const routes = [
           requiresAuth: true // Pagina che richiede autenticazione
         }
       },
-      /*{
-        path: "user-projects",
-        name: "UserProjects",
-        component: UserProjects,
+      {
+        path: "notifiche",
+        name: "Notifiche",
+        component: Notifiche,
         meta: {
           requiresAuth: true // Pagina che richiede autenticazione
         }
-      },*/
-      /*{
-        path: "edit-project",
-        name: "EditProject",
-        component: EditProject,
-        meta: {
-          requiresAuth: true // Pagina che richiede autenticazione
-        }
-      }*/
+      }
     ]
   },
   {
@@ -48,7 +41,7 @@ const routes = [
     name: "Rapportini",
     component: RapportiniPage,
     meta: {
-      requiresAuth: true
+      requiresAuth: true // Pagina che richiede autenticazione
     }
   },
   {

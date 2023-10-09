@@ -5,6 +5,9 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  compilerOptions: {
+    isCustomElement: true, // Esclude gli elementi custom element nativi dalla risoluzione dei componenti
+  },
   plugins: [
     vue(),
   ],

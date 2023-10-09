@@ -145,23 +145,23 @@
                     </div>
                   </div>
                 </td>
-                <td>{{ progetto.commessa.nomeCommessa }}</td>
+                <td>{{ progetto.commessa ? progetto.commessa.nomeCommessa : '-' }}</td>
                 <td>{{ progetto.idIntervento }}</td>
                 <td>{{ progetto.statoIntervento }}</td>
                 <td>{{ progetto.stima }}</td>
                 <td>{{ progetto.effort }}</td>
-                <td><!--{{ progetto.operatore.cognome }} {{ progetto.operatore.nome }}--></td>
+                <td>{{ progetto.operatore.cognome }} {{ progetto.operatore.nome }}</td>
                 <td>{{ progetto.trimestre }}</td>
                 <td>{{ formatDate(progetto.dataInizio) }}</td>
                 <td>{{ formatDate(progetto.dataInizio) }}</td>
                 <td>
                   <input type="checkbox" v-bind:disabled="(progetto.giorniRapportini && progetto.percentualeAvanzamento) ||
                     (progetto.statoIntervento !== 'Pianificato' &&
-                      progetto.statoIntervento !== 'In lavorazione')
-                    " v-model="progetto.inLavorazione" @change="updateLavorazione(progetto)" />
+                    progetto.statoIntervento !== 'In lavorazione')" 
+                    v-model="progetto.inLavorazione" @change="updateLavorazione(progetto)" />
                 </td>
-                <td>{{ progetto.giorniRapportini }}</td>
-                <td>{{ progetto.percentualeAvanzamento }}</td>
+                <td>{{ progetto.giorniDiAvanzamento }}</td>
+                <td>{{ progetto.percentualeAvanzamento }}%</td>
                 <td>
                   <div>
                     <button v-b-modal.rapportini-modal class="icon-button" @click="insertUpdateRapportino(progetto)">

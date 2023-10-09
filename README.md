@@ -20,9 +20,10 @@ Questo è un progetto di gestione di progetti che consente di organizzare e tene
 
 1. Clona questo repository sul tuo computer.
 2. Naviga nella cartella del progetto: `cd gestione-progetti`.
-3. Installa le dipendenze: `npm install`.
-4. Avvia l'applicazione: `npm start`.
-5. Apri il browser e vai all'indirizzo: `http://localhost:8080`.
+3. Naviga nelle cartelle `cd FE` e `cd BE` rispettivamente (accedi da due terminali diversi).
+4. Installa le dipendenze: `npm install`.
+5. Avvia l'applicazione: `npm run start` per entrambi il FE e il BE.
+6. Apri il browser e vai all'indirizzo: `http://localhost:8080`.
 
 ## Tecnologie Utilizzate
 

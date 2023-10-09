@@ -18,7 +18,7 @@
       </li>
     </ul>
   </nav>-->
-  <ul id="section-tabs" class="nav d-md-flex px-3">
+  <!--<ul id="section-tabs" class="nav d-md-flex px-3">
     <li class="nav-item d-flex align-items-center pointer">
       <span class="nav-link">Dashboard</span>
     </li>
@@ -28,7 +28,45 @@
     <li class="nav-item d-flex align-items-center pointer">
       <span class="nav-link">Logout</span>
     </li>
-  </ul> 
+  </ul>-->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <router-link class="nav-link" to="/container/dashboard">Dashboard</router-link>
+        </li>
+
+        <li class="nav-item">
+          <router-link class="nav-link" to="/container/notifiche">
+            <i class="mdi mdi-bell"></i>
+            <span class="badge">3</span>
+          </router-link>
+        </li>
+        <li class="nav-item dropdown right">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false" @click="logout()">
+            <i class="mdi mdi-logout"></i>
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+
+
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+
+      </form>
+    </div>
+  </nav>
 </template>
   
 <script>
@@ -36,7 +74,18 @@ import axios from "axios";
 
 export default {
   name: "Navbar",
+  data(){
+    return {
+      countNotificheDaLeggere: 0
+    }
+  },
   methods: {
+    countNotificheDaLeggere() {
+      axios.get("http://localhost:3000/notificheDaLeggere").then((response) => {
+        console.log("Risposta GET:", response.data);
+        this.countNotificheDaLeggere = response.data.count;
+      });
+    },
     logout() {
       // Logica per eseguire il logout dell'utente
       // Puoi implementare qui la tua logica per il logout
@@ -110,7 +159,7 @@ export default {
   .nav-item {
     color: white;
     font-weight: bold;
-    
+
 
     &.active {
       border-bottom: 4px solid white;
@@ -124,5 +173,12 @@ export default {
   .nav-link {
     color: black !important;
   }
+}
+
+a .badge {
+  background-color: red !important;
+  font-size: 12px;
+  z-index: 1001;
+  color: white !important;
 }
 </style>

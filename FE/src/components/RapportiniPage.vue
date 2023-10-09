@@ -12,9 +12,7 @@
             </div>
             <div class="col-sm-5 mt-3 text-right">
                 <span>Le ore rapportinate sono
-                    {{ progettoInfo?.rapportini ? getOreTotaliRapportinate(progettoInfo?.rapportini) :
-                        '0:00' }} quelle stimate
-                    {{ progettoInfo?.effort * 8 }}:00 </span>
+                    {{ rapportini.length > 0 ? oreTotaliRapportinate : '0:00' }} quelle stimate {{ progettoInfo?.effort * 8 }}:00 </span>
             </div>
         </div>
     </header>
@@ -24,10 +22,10 @@
                 <div class="col-sm-12">
                     <div class="row" style="min-height: 500px">
                         <div class="col-sm-12">
-                            <div class="btn-group-vertical">
-                                <button class="btn btn-primary" v-for="rapportino in progettoInfo.rapportini"
+                            <div class="btn-group-vertical m-2">
+                                <button class="btn btn-primary p-3" v-for="rapportino in rapportini"
                                     :key="rapportino" @click="viewRapportino(rapportino)">
-                                    {{ rapportino.idRapportino }} -
+                                    {{ rapportino._id.substring(0, 10) }} -
                                     {{ formatDate(rapportino.dataRapportino) }}
                                 </button>
                             </div>
@@ -61,7 +59,8 @@
                         <div class="col-sm-2">
                             <span class="key color-light">Commessa</span>
                         </div>
-                        <div class="col-sm-8"></div>
+                        <div class="col-sm-8">{{ modelRap.commessa.numeroCommessa }} - {{ modelRap.commessa.nomeCommessa }}
+                        </div>
                     </div>
                     <div class="row mt-3 mb-2">
                         <div class="col-sm-2">
@@ -160,6 +159,8 @@ export default {
             progettoInfo: {},
             loadingRap: false,
             comboOperatori: [],
+            rapportini: [],
+            oreTotaliRapportinate: ""
         }
 
     },
@@ -172,29 +173,49 @@ export default {
         this.setModel();
 
         this.getComboOperatori();
+
+        this.getRapportiniByProjectId();
     },
     methods: {
         nuovoRapportino() {
             this.loadingRap = true;
-            setTimeout(() => {
-                this.setModel();
-
-                this.loadingRap = false;
-            }, 2000)
+            this.setModel();
         },
-        confermaModaleRapportino() { },
+        confermaModaleRapportino() {
+            // inserimento del rapportino
+            this.loadingRap = true;
+            return axios.put("http://127.0.0.1:3000/nuovoRapportino", {
+                progetto: this.progettoInfo,
+                rapportinoDaInserire: this.modelRap
+                }).then((response) => {
+                    console.log("Risposta PUT:", response.data);
+                    setTimeout(() => {
+                        this.setModel();
+
+                        this.loadingRap = false;
+                    }, 2000)
+                })
+                .catch((error) => {
+                    console.log("Errore:", error);
+                });
+
+        },
         annullaModaleRapportino() {
-
+            this.setModel();
         },
-        cancellaModaleRapportino() { },
-        viewRapportino(rapportino) { },
-        getOreTotaliRapportinate(rapportini) {
+        cancellaModaleRapportino() {
+            this.setModel();
+        },
+        viewRapportino(rapportino) {
+            this.modelRap = rapportino;
+        },
+        getOreTotaliRapportinate() {
             let sommaOre = 0;
             let sommaMinuti = 0;
 
-            rapportini.forEach((r) => {
-                sommaOre += r.ore;
-                sommaMinuti += r.minuti;
+            this.rapportini.forEach((r) => {
+                sommaOre += r.oreRapportino;
+                sommaMinuti += r.minutiRapportino;
             });
 
             let ore = sommaOre;
@@ -242,8 +263,28 @@ export default {
                 descrizioneRapportino: "",
                 oreRapportino: 8,
                 minutiRapportino: 0
-
             }
+        },
+        getRapportiniByProjectId() {
+            this.loadingRap = true;
+            axios.get("http://127.0.0.1:3000/rapportini", {
+                params: {
+                    idProgetto: this.progettoInfo._id
+                }
+                }).then((response) => {
+                    console.log("Risposta GET:", response.data);
+                    setTimeout(() => {
+                        this.rapportini = response.data.rapportini;
+                        this.oreTotaliRapportinate = this.getOreTotaliRapportinate();
+                        this.loadingRap = false;
+                    }, 2000);
+                })
+                .catch((error) => {
+                    console.log("Errore:", error);
+                });
+        },
+        formatDate(date) {
+            return moment(date).format("DD/MM/YYYY"); // Esempio: 01/01/2022
         }
     }
 };
