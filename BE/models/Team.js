@@ -3,12 +3,10 @@ const mongoose = require("mongoose");
 // Team
 const teamSchema = new mongoose.Schema({
   numeroTeam: {
-    type: String,
-    required: true
+    type: String
   },
   nomeTeam: {
-    type: String,
-    required: true
+    type: String
   }
 }, { collection: "team" });
 

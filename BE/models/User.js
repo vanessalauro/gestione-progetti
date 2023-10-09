@@ -3,29 +3,23 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   nome: {
-    type: String,
-    required: true
+    type: String
   },
   cognome: {
-    type: String,
-    required: true
+    type: String
   },
   username: {
     type: String,
-    required: true,
     unique: true
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
   admin: {
-    type: Boolean,
-    required: true
+    type: Boolean
   },
   manager: {
-    type: Boolean,
-    required: true
+    type: Boolean
   }
 }, { collection: "utenti" });
 

@@ -11,20 +11,16 @@ const rapportiniSchema = new mongoose.Schema({
         type: userSchema
     },
     dataRapportino: {
-        type: Date,
-        required: true
+        type: Date
     },
     descrizioneRapportino: {
-        type: String,
-        required: true
+        type: String
     },
     oreRapportino: {
-        type: Number,
-        required: true
+        type: Number
     },
     minutiRapportino: {
-        type: Number,
-        required: true
+        type: Number
     }
 }, { collection: "rapportini" }); 
 

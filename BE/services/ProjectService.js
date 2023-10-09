@@ -1,9 +1,16 @@
 const mongoose = require("mongoose");
+const mongodb = require('mongodb');
 const Project = require("../models/Project");
+const Commessa = require("../models/Commessa");
+const Rapportino = require("../models/Rapportini");
+const Operatore = require("../models/User");
 
 class ProjectService {
   constructor() {
     this.projectModel = mongoose.model("Project", Project)
+    this.commessaModel = mongoose.model("Commessa", Commessa);
+    this.operatoreModel = mongoose.model("Operatore", Operatore);
+    this.rapportinoModel = mongoose.model("Rapportino", Rapportino);
   }
 
   async getProjects(idIntervento, numeroCommessa, trimestre, operatore, statoIntervento) {
@@ -36,7 +43,38 @@ class ProjectService {
       .populate("commessa")
       .exec();
 
-    console.log("progetti: ", projects);
+    // console.log("progetti: ", projects);
+
+    for (let i = 0; i < projects.length; i++) {
+      projects[i].commessa = await this.commessaModel.findById(projects[i].commessa._id);
+      projects[i].operatore = await this.operatoreModel.findById(projects[i].operatore._id);
+
+      const query = {
+        progetto: {
+          _id: new mongodb.ObjectId(projects[i]._id)
+        }
+      }
+      const rapport = await this.rapportinoModel.find(query);
+
+      // console.log("rapport: ", rapport);
+
+      let sommaOre = 0;
+      let sommaMinuti = 0;
+
+      rapport.forEach(r =>{
+        sommaOre += r.oreRapportino;
+        console.log("sommaOre: ", sommaOre);
+        sommaMinuti += r.minutiRapportino;
+      });
+
+      projects[i].giorniDiAvanzamento = (sommaOre + (sommaMinuti / 60) ) / 8;
+      projects[i].percentualeAvanzamento = (projects[i].giorniDiAvanzamento / projects[i].effort) * 100;
+
+      // console.log("giorniDiAvanzamento: ", projects[i].giorniDiAvanzamento);
+      // console.log("percentualeAvanzamento: ", projects[i].percentualeAvanzamento);
+    }
+
+    // console.log("progetti: ", projects);
 
     return projects;
   }
@@ -101,6 +139,49 @@ class ProjectService {
     } catch (error) {
       console.log('Errore nell\'aggiornamento del progetto:', error);
       throw error; // Rilancia l'errore per gestirlo nella funzione chiamante, se necessario
+    }
+  }
+
+  async nuovoRapportino(progetto, rapportino) {
+    try {
+      const project = await this.projectModel.findById(progetto._id);
+      const operator = await this.operatoreModel.findById(progetto.operatore._id);
+
+      // console.log('project: ', project);
+      // console.log('operator: ', operator);
+
+      const nuovoRapportino = await this.rapportinoModel.create({
+        progetto: project,
+        operatore: operator,
+        dataRapportino: new Date(rapportino.dataRapportino),
+        descrizioneRapportino: rapportino.descrizioneRapportino,
+        oreRapportino: rapportino.oreRapportino,
+        minutiRapportino: rapportino.minutiRapportino
+      });
+
+      // console.log('nuovoRapportino: ', nuovoRapportino);
+
+      return nuovoRapportino;
+    } catch (error) {
+      console.log('Errore nell\'aggiornamento del progetto:', error);
+      throw error; // Rilancia l'errore per gestirloInThe funzione chiamante, se necessario
+    }
+  }
+
+  async getRapportini(idProgetto) {
+    try {
+      // console.log('idProgetto: ', idProgetto);
+      const query = {
+        progetto: {
+          _id: new mongodb.ObjectId(idProgetto)
+        }
+      }
+      const rapportini = await this.rapportinoModel.find(query);
+      // console.log('rapportini: ', rapportini);
+      return rapportini;
+    } catch (error) {
+      console.log('Errore nell\'aggiornamento del progetto:', error);
+      throw error;
     }
   }
 }

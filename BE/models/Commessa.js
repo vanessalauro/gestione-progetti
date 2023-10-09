@@ -3,12 +3,10 @@ const mongoose = require("mongoose");
 // Commessa
 const commessaSchema = new mongoose.Schema({
   numeroCommessa: {
-    type: String,
-    required: true
+    type: String
   },
   nomeCommessa: {
-    type: String,
-    required: true
+    type: String
   }
 }, { collection : "commessa" });
 

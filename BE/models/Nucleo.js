@@ -3,12 +3,10 @@ const mongoose = require("mongoose");
 // Nucleo
 const nucleoSchema = new mongoose.Schema({
   numeroNucleo: {
-    type: String,
-    required: true
+    type: String
   },
   nomeNucleo: {
-    type: String,
-    required: true
+    type: String
   }
 }, { collection: "nuclei" });
 

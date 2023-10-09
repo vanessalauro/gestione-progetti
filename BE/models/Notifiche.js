@@ -2,16 +2,22 @@
 const mongoose = require('mongoose');
 const userSchema = require('./User');
 
-const userSchema = new mongoose.Schema({
-    descrizioneNotifica: {
+const notificheSchema = new mongoose.Schema({
+    title: {
+        type: String
+    },
+    body: {
         type: String
     },
     dataNotifica: {
         type: Date
     },
     operatore:{
-        type: userSchema
+        type: userSchema 
+    },
+    read: {
+        type: Boolean
     }
 }, { collection: "notifiche" });
 
-module.exports = userSchema;
+module.exports = notificheSchema;

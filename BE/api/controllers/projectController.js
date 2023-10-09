@@ -126,6 +126,41 @@ const projectController = {
       console.log(error);
       return;
     }
+  },
+
+  async nuovoRapportino(req, res) {
+    try {
+      const { progetto, rapportinoDaInserire } = req.body;
+      // console.log('progetto: ', progetto);
+      // console.log('rapportinoDaInserire: ', rapportinoDaInserire);
+      const nuovoRapportino = await ProjectService.nuovoRapportino(progetto, rapportinoDaInserire);
+      if (nuovoRapportino) {
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
+        return res.json({ nuovoRapportino: nuovoRapportino });
+      } else {
+        return res.json({ error: 'Errore nel db' });  
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  },
+
+  async getRapportini(req, res) {
+    try {
+      const idProgetto = req.query.idProgetto;
+      console.log('idProgetto: ', idProgetto);
+      const rapportini = await ProjectService.getRapportini(idProgetto);
+      if (rapportini) {
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
+        return res.json({ rapportini: rapportini });
+      } else {
+        return res.json({ error: 'Errore nel db' });  
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
   }
 }
 
