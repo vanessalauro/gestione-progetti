@@ -39,7 +39,7 @@ import Footer from './shared/Footer.vue';
 // Importa il file CSS di @mdi/font
 import '@mdi/font/css/materialdesignicons.min.css';
 import 'vuetify/dist/vuetify.min.css'; // Importa i CSS di Vuetify
-import BootstrapVue from "bootstrap-vue";
+// import BootstrapVue from "bootstrap-vue";
 
 const app = createApp(App);
 
