@@ -29,7 +29,7 @@
       <span class="nav-link">Logout</span>
     </li>
   </ul>-->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <!--<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -66,7 +66,27 @@
 
       </form>
     </div>
-  </nav>
+  </nav>-->
+
+  <v-toolbar class="navbar navbar-expand-lg navbar-light bg-light" density="compact" :elevation="8">
+
+    <v-toolbar-title>
+      <v-btn @click="goToDashboard()">
+        Gestione Progetti
+      </v-btn>
+    </v-toolbar-title>
+
+    <v-spacer></v-spacer>
+    
+    <v-btn icon @click="goToNotifiche()">
+      <i class="mdi mdi-bell"></i>
+      <span class="badge">3</span>
+    </v-btn>
+
+    <v-btn icon @click="logout()">
+      <v-icon>mdi-export</v-icon>
+    </v-btn>
+  </v-toolbar>
 </template>
   
 <script>
@@ -74,17 +94,23 @@ import axios from "axios";
 
 export default {
   name: "Navbar",
-  data(){
+  data() {
     return {
       countNotificheDaLeggere: 0
     }
   },
   methods: {
-    countNotificheDaLeggere() {
+    getCountNotificheDaLeggere() {
       axios.get("http://localhost:3000/notificheDaLeggere").then((response) => {
         console.log("Risposta GET:", response.data);
         this.countNotificheDaLeggere = response.data.count;
       });
+    },
+    goToNotifiche() {
+      this.$router.push("/container/notifiche");
+    },
+    goToDashboard() {
+      this.$router.push("/container/dashboard");
     },
     logout() {
       // Logica per eseguire il logout dell'utente
@@ -175,8 +201,8 @@ export default {
   }
 }
 
-a .badge {
-  background-color: red !important;
+span .badge {
+  background-color: #9ff8f8 !important;
   font-size: 12px;
   z-index: 1001;
   color: white !important;

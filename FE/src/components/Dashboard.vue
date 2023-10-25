@@ -43,47 +43,17 @@
               </select>
             </div>
           </div>
-          <!--<div class="row">
-            <div class="col-md-3">
-              <div class="row">
-                <div class="col-md-12">
-                  <label for="team">Team</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <select class="form-select form-control-sm" id="trimestre" v-model="filters.team">
-                    <option v-for="trim in comboTeam" :value="trim.numeroTeam">{{ trim.nomeTeam }}</option>
-                  </select>
-                </div>
-              </div>
-            </div>-->
-          <!--<div class="col-md-3">
-              <div class="row">
-                <div class="col-md-12">
-                  <label for="nucleo">Nucleo</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <select class="form-select form-control-sm" id="nucleo" v-model="filters.nucleo">
-                    <option v-for="nuc in comboNuclei" :value="nuc.numeroNucleo">{{ nuc.nomeNucleo }}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>-->
         </div>
         <div class="row">
           <div class="col-sm-11 d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary mr-2" @click="reset()">
+            <v-btn class="btn btn-secondary mr-2" @click="reset()">
               Reset
-            </button>
+            </v-btn>
           </div>
           <div class="col-sm-1 p-0">
-            <button type="submit" class="btn btn-primary" @click="cercaInterventi(filters)">
+            <v-btn class="btn btn-primary" @click="cercaInterventi(filters)">
               Cerca
-            </button>
+            </v-btn>
           </div>
         </div>
       </div>
@@ -93,9 +63,79 @@
         <div class="card-body">
           <div class="row">
             <div class="col-sm-12">
-              <button type="button" class="icon-button" @click="showModal(false)">
+
+              <v-btn class="icon-button">
                 <i class="mdi mdi-plus"></i>
-              </button>
+                <v-dialog v-model="insertDialog" activator="parent" width="1024">
+                  {{  modalInsert }}
+                  <v-card>
+                    <v-card-title>
+                      <span class="headline">Nuovo Intervento</span>
+                    </v-card-title>
+                    <v-card-body>
+                      <div class="form-group m-4">
+                        <input type="text" class="form-control" placeholder="Nome Intervento" id="intervento"
+                          v-model="modalInsert.descrIntervento" :disabled="isDisabled" />
+                      </div>
+                      <div class="form-group m-4">
+                        <input type="text" class="form-control" placeholder="N. Commessa" id="commessa"
+                          v-model="modalInsert.commessa" :disabled="isDisabled" />
+                      </div>
+                      <div class="form-group m-4">
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <input type="number" class="form-control" placeholder="Stima" id="stima"
+                              v-model="modalInsert.stima" :disabled="isDisabled" />
+                          </div>
+                          <div class="col-sm-3">
+                            <input type="number" class="form-control" placeholder="Effort" id="effort"
+                              v-model="modalInsert.effort" :disabled="isDisabled" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group m-4">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <select class="form-control" id="trimestre" v-model="modalInsert.trimestre"
+                              :disabled="isDisabled">
+                              <option value="" disabled selected>Trimestre</option>
+                              <option v-for="trim in comboTrimestri" :value="trim.value">
+                                {{ trim.label }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group m-4">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <select class="form-control" id="operatore" v-model="modalInsert.operatore"
+                              :disabled="isDisabled">
+                              <option value="" disabled selected>Operatore</option>
+                              <option v-for="op in comboOperatori" :value="op._id">
+                                {{ op.nome }} {{ op.cognome }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <!--<div class="form-group m-4">
+                        <label for="documents">Documents </label>
+                      </div>-->
+                    </v-card-body>
+
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="blue-darken-1" variant="text" @click="insertDialog = false">
+                        Annulla
+                      </v-btn>
+                      <v-btn color="blue-darken-1" variant="text" @click="editInsertProject(false)">
+                        Salva
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-btn>
             </div>
           </div>
           <div class="row m-auto p-5 text-center" v-if="loading">
@@ -132,21 +172,121 @@
                 <td>
                   <div class="row">
                     <div class="col-sm-12">
-                      <button class="icon-button" v-bind:disabled="progetto.statoIntervento !== 'Pianificato' &&
-                        progetto.statoIntervento !== 'In lavorazione'
-                        " @click="showModal(true, progetto)">
+                      <!-- modifica intervento -->
+                      <v-btn class="icon-button" @click="getProject(progetto)">
                         <i class="mdi mdi-pencil"></i>
-                      </button>
-                      <button class="icon-button" v-bind:disabled="progetto.statoIntervento !== 'Pianificato' &&
-                        progetto.statoIntervento !== 'In lavorazione'
-                        " @click="deleteProject(progetto.idIntervento)">
+                        <v-dialog v-model="dialogEdit" activator="parent" width="1024">
+                          <v-card>
+                            <v-card-title>
+                              <span class="headline">Modifica Intervento</span>
+                            </v-card-title>
+                            <v-card-body>
+                              <div class="form-group m-4">
+                                <input type="text" class="form-control" placeholder="N. Commessa" id="commessa"
+                                  v-model="modalEdit.commessa"
+                                  :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))" />
+                              </div>
+                              <div class="form-group m-4">
+                                <div class="row">
+                                  <div class="col-sm-3">
+                                    <input type="text" class="form-control" placeholder="Stima" id="stima"
+                                      v-model="modalEdit.stima"
+                                      :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))" />
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <input type="text" class="form-control" placeholder="Effort" id="effort"
+                                      v-model="modalEdit.effort"
+                                      :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))" />
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group m-4">
+                                <div class="row">
+                                  <div class="col-md-3">
+                                    <select class="form-control" id="trimestre" v-model="modalEdit.trimestre"
+                                      :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))">
+                                      <option value="" disabled selected>Trimestre</option>
+                                      <option v-for="trim in comboTrimestri" :value="trim.value">
+                                        {{ trim.label }}
+                                      </option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group m-4">
+                                <div class="row">
+                                  <div class="col-md-3">
+                                    <select class="form-control" id="operatore" v-model="modalEdit.operatore"
+                                      :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))">
+                                      <option value="" disabled selected>Operatore</option>
+                                      <option v-for="op in comboOperatori" :value="op._id">
+                                        {{ op.nome }} {{ op.cognome }}
+                                      </option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                              <!--<div class="form-group m-4">
+                                <label for="documents">Documents </label>
+                              </div>-->
+                            </v-card-body>
+
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn color="blue-darken-1" variant="text"
+                                v-if="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))"
+                                @click="dialogEdit = false">
+                                Chiudi
+                              </v-btn>
+                              <v-btn color="blue-darken-1" variant="text"
+                                v-if="!((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))"
+                                @click="dialogEdit = false">
+                                Annulla
+                              </v-btn>
+                              <v-btn color="blue-darken-1" variant="text"
+                                v-if="!((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))"
+                                @click="editInsertProject(true)">
+                                Salva
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-btn>
+
+                      <!-- elimina progetto -->
+                      <v-btn class="icon-button" @click="openDeleteProject(progetto)">
                         <i class="mdi mdi-delete"></i>
-                      </button>
+                        <v-dialog v-model="deleteProjectDialog" activator="parent" width="500">
+                          <v-card>
+                            <v-card-title>
+                              <span class="headline">Elimina progetto</span>
+                            </v-card-title>
+                            <v-card-body>
+                              <div class="form-group m-4">
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <p>Sicuro di voler cancellare il progetto?</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </v-card-body>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn color="blue-darken-1" variant="text" @click="deleteProjectDialog = false">
+                                Annulla
+                              </v-btn>
+                              <v-btn color="blue-darken-1" variant="text" @click="deleteProject(deletedProject._id)">
+                                Conferma
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-btn>
                     </div>
                   </div>
                 </td>
                 <td>{{ progetto.commessa ? progetto.commessa.nomeCommessa : '-' }}</td>
-                <td>{{ progetto.idIntervento }}</td>
+                <td>{{ progetto._id.substring(0, 10) }}</td>
                 <td>{{ progetto.statoIntervento }}</td>
                 <td>{{ progetto.stima }}</td>
                 <td>{{ progetto.effort }}</td>
@@ -155,21 +295,58 @@
                 <td>{{ formatDate(progetto.dataInizio) }}</td>
                 <td>{{ formatDate(progetto.dataInizio) }}</td>
                 <td>
-                  <input type="checkbox" v-bind:disabled="(progetto.giorniRapportini && progetto.percentualeAvanzamento) ||
-                    (progetto.statoIntervento !== 'Pianificato' &&
-                    progetto.statoIntervento !== 'In lavorazione')" 
+                  <input type="checkbox"
+                    v-bind:disabled="(progetto.giorniDiAvanzamento && progetto.percentualeAvanzamento)"
                     v-model="progetto.inLavorazione" @change="updateLavorazione(progetto)" />
                 </td>
                 <td>{{ progetto.giorniDiAvanzamento }}</td>
                 <td>{{ progetto.percentualeAvanzamento }}%</td>
                 <td>
                   <div>
-                    <button v-b-modal.rapportini-modal class="icon-button" @click="insertUpdateRapportino(progetto)">
+                    <v-btn class="icon-button" @click="insertUpdateRapportino(progetto)">
                       <i class="mdi mdi-note-outline"></i>
-                    </button>
-                    <button class="icon-button" @click="closeProject(progetto)">
+                    </v-btn>
+                    <v-btn class="icon-button" @click="closeProject(progetto)">
                       <i class="mdi mdi-close"></i>
-                    </button>
+                      <v-dialog v-model="closeProjectDialog" activator="parent" width="500">
+                        <v-card>
+                          <v-card-title>
+                            <span class="headline">Chiudi progetto</span>
+                          </v-card-title>
+                          <v-card-body>
+                            <div class="form-group m-4">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <p>Seleziona lo stato di chiusura</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group m-4">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <select class="form-control" id="statoIntervento" v-model="reasonState">
+                                    <option value="" disabled selected>Stato intervento</option>
+                                    <option v-for="state in comboStatiChiusura" :value="state.value">
+                                      {{ state.label }}
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </v-card-body>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue-darken-1" variant="text" @click="closeProjectDialog = false">
+                              Annulla
+                            </v-btn>
+                            <v-btn color="blue-darken-1" variant="text" @click="updateStatoChiusuraIntervento()">
+                              Conferma
+                            </v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+                    </v-btn>
+
                   </div>
                 </td>
               </tr>
@@ -179,224 +356,16 @@
       </div>
     </div>
   </div>
-
-  <!--<ModalProject v-show="isCloseRapportiniModal" @close="closeRapportiniModal()">
-    <template v-slot:header>
-      Rapportini di Sviluppo {{ modalRapportiniProject?.idIntervento }} -
-      {{ modalRapportiniProject?.descrIntervento }}
-    </template>
-    <template v-slot:body>
-      <div class="row">
-        <div class="col-sm-12 text-right">
-          <span>Le ore rapportinate sono
-            {{ modalRapportiniProject?.rapportini ? getOreTotaliRapportinate(modalRapportiniProject?.rapportini) : '0.00' }} quelle stimate
-            {{ getmodalRapportiniProject?.effort }} </span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-2 border-right">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="row" style="min-height: 500px">
-                <div class="col-sm-12">
-                  <div class="btn-group-vertical">
-                    <button class="btn btn-primary" v-for="rapportino in modalRapportiniProject.rapportini"
-                      :key="rapportino" @click="viewRapportino(rapportino)">
-                      {{ rapportino.idRapportino }} -
-                      {{ formatDate(rapportino.dataRapportino) }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-12">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="nuovoRapportino()">
-                    <i class="mdi mdi-note-outline"></i>Nuovo Rapportino
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="row mb-2">
-            <div class="col-sm-2">
-              <span class="key">Id Rapportino</span>
-            </div>
-            <div class="col-sm-10">{{ modelRap.idRapportino }}</div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-sm-2">
-              <span class="key">Tipologia</span>
-            </div>
-            <div class="col-sm-10">Sviluppo</div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-sm-2">
-              <span class="key">Operatore</span>
-            </div>
-            <div class="col-sm-10">
-              <select class="form-control" id="operatore" v-model="modelRap.operatore.username">
-                <option value="" disabled selected>Operatore</option>
-                <option v-for="op in comboOperatori" :value="op.id">
-                  {{ op.nome }} {{ op.cognome }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-sm-2">
-              <span class="key">Data</span>
-            </div>
-            <div class="col-sm-10">
-              <input type="date" class="form-control" id="data" v-model="modelRap.dataRapportino">
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-sm-2">
-              <span class="key">Descrizione</span>
-            </div>
-            <div class="col-sm-10">
-              <textarea class="form-control" name="comment" cols="40" rows="10"
-                v-model="modelRap.descrizioneRapportino"></textarea>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-sm-2">Ore di Lavoro</div>
-            <div class="col-sm-10">
-              <input type="number" class="form-control" id="ora" v-model="modelRap.oraRapportino">
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-sm-2">Minuti di Lavoro</div>
-            <div class="col-sm-10">
-              <input type="number" class="form-control" id="minuti" v-model="modelRap.minutiRapportino">
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-sm-2">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="cancellaModaleRapportino()">
-                <i class="mdi mdi-close"></i>Cancella
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </template>
-    <template v-slot:footer>
-      <button type="button" class="btn btn-primary float-right" data-dismiss="modal" @click="confermaModaleRapportino()">
-        <i class="mdi mdi-note-outline"></i>Conferma
-      </button>
-      <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal" @click="annullaModaleRapportino()">
-        <i class="mdi mdi-note-outline"></i>Annulla
-      </button>
-    </template>
-  </ModalProject>-->
-
-  <ModalProject v-show="isCloseProjectModal" @close="closeProjectModal">
-    <template v-slot:header> Chiudi progetto </template>
-    <template v-slot:body>
-      <p>Seleziona lo stato di chiusura</p>
-      <select class="form-control" id="statoIntervento" v-model="reasonState">
-        <option value="" disabled selected>Stato intervento</option>
-        <option v-for="state in comboStatiChiusura" :value="state.value">
-          {{ state.label }}
-        </option>
-      </select>
-    </template>
-    <template v-slot:footer>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeProjectModal()">
-        Annulla
-      </button>
-      <button type="button" class="btn btn-primary" @click="updateStatoChiusuraIntervento()">
-        Chiudi progetto
-      </button>
-    </template>
-  </ModalProject>
-
-  <ModalProject v-show="isModalVisible" @close="closeModalInsert">
-    <template v-slot:header>Nuovo progetto</template>
-
-    <template v-slot:body>
-      <div class="form-group">
-        <input type="text" class="form-control" placeholder="N. Commessa" id="commessa" v-model="modal.commessa" />
-      </div>
-      <!--<div class="form-group">
-        <input type="text" class="form-control" placeholder="Project name" id="projectName" v-model="modal.commessa"/>
-      </div>-->
-      <!--<div class="form-group">
-        <textarea class="form-control" id="projectDescription" placeholder="Project description"></textarea>
-      </div>-->
-      <div class="form-group">
-        <div class="row">
-          <div class="col-sm-3">
-            <input type="text" class="form-control" placeholder="Stima" id="stima" v-model="modal.stima" />
-          </div>
-          <div class="col-sm-3">
-            <input type="text" class="form-control" placeholder="Effort" id="effort" v-model="modal.effort" />
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-3 mt-2">
-            <select class="form-control" id="trimestre" v-model="modal.trimestre">
-              <option value="" disabled selected>Trimestre</option>
-              <option v-for="trim in comboTrimestri" :value="trim.value">
-                {{ trim.label }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-3 mt-2">
-            <select class="form-control" id="operatore" v-model="modal.operatore">
-              <option value="" disabled selected>Operatore</option>
-              <option v-for="op in comboOperatori" :value="op.id">
-                {{ op.nome }} {{ op.cognome }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="row">
-          <div class="col-sm-3">
-            <!--<input type="text" class="form-control" placeholder="Data inizio" id="dataInizio"
-              v-model="modal.dataInizio" />-->
-          </div>
-          <div class="col-sm-3">
-            <!--<input type="text" class="form-control" placeholder="Data fine" id="dataFine" v-model="modal.dataFine" />-->
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="documents">Documents</label>
-        <!--<document-manager></document-manager>-->
-      </div>
-    </template>
-
-    <template v-slot:footer>
-      <button @click="editProject()">Update Project</button>
-    </template>
-  </ModalProject>
 </template>
 
 <script>
 import axios from "axios";
 import moment from "moment";
 // import DocumentManager from "./DocumentManager.vue";
-import ModalProject from "../shared/modalProject.vue";
 import { toRaw } from "vue";
 
 export default {
   name: "Dashboard",
-  components: {
-    ModalProject,
-    // DocumentManager,
-  },
   data() {
     return {
       projects: [],
@@ -415,34 +384,31 @@ export default {
         operatore: "",
         statoIntervento: "",
       },
-      inLavorazione: false,
-      isModalVisible: false,
-      isCloseProjectModal: false,
-      isUpdateMode: false,
-      updateIdIntervento: "",
-      modal: {
-        commessa: "",
-        stima: "",
-        effort: "",
-        trimestre: "",
-        operatore: "",
-        // dataInizio: "",
-        // dataFine: ""
+      modalInsert: {
+        commessa: null,
+        stima: null,
+        effort: null,
+        trimestre: null,
+        operatore: null,
       },
+      modalEdit: {
+        commessa: null,
+        stima: null,
+        effort: null,
+        trimestre: null,
+        operatore: null
+      },
+      inLavorazione: false,
+      updateIdIntervento: "",
       updateProject: {},
       closedProject: null,
       reasonState: "",
-      // isCloseRapportiniModal: false,
-      // modalRapportiniProject: {},
-      // modelRap: {
-      //   idRapportino: "",
-      //   operatore: "",
-      //   dataRapportino: null,
-      //   descrizioneRapportino: "",
-      //   oreRapportino: 8,
-      //   minutiRapportino: 0
-      // },
-      // loadingRap: false
+      isDisabled: false,
+      insertDialog: false,
+      dialogEdit: false,
+      closeProjectDialog: false,
+      deleteProjectDialog: false,
+      deletedProject: {}
     };
   },
   mounted() {
@@ -475,29 +441,20 @@ export default {
         statoIntervento: "",
       };
     },
-    editProject() {
-      this.isModalVisible = false;
-      if (this.updateProject) {
+    editInsertProject(edit) {
+      if (edit) {
         // update project
-        const ope = this.comboOperatori.find((op) => op.id === this.modal.operatore);
+        this.dialogEdit = false;
         return axios
           .post(`http://127.0.0.1:3000/project`, {
             idIntervento: this.updateProject.idIntervento,
-            trimestre: this.modal.trimestre,
-            operatore: {
-              nome: ope.nome,
-              cognome: ope.cognome,
-              email: ope.email,
-              username: ope.username,
-              password: ope.password,
-              admin: ope.admin,
-              manager: ope.manager,
-            },
-            stima: this.modal.stima,
-            effort: this.modal.effort,
+            trimestre: this.modalEdit.trimestre,
+            operatore: this.modalEdit.operatore,
+            stima: this.modalEdit.stima,
+            effort: this.modalEdit.effort,
             commessa: {
               numeroCommessa: "1",
-              nomeCommessa: this.modal.commessa,
+              nomeCommessa: this.modalEdit.commessa,
             },
           })
           .then((response) => {
@@ -521,41 +478,26 @@ export default {
           });
       } else {
         // insert project
-        const ope = this.comboOperatori.find((op) => op.id === this.modal.operatore);
+        this.insertDialog = false;
         return axios
           .put(`http://127.0.0.1:3000/project`, {
-            idIntervento: "I002",
-            trimestre: this.modal.trimestre,
-            operatore: {
-              nome: ope.nome,
-              cognome: ope.cognome,
-              email: ope.email,
-              username: ope.username,
-              password: ope.password,
-              admin: ope.admin,
-              manager: ope.manager,
-            },
-            stima: this.modal.stima,
-            effort: this.modal.effort,
-            commessa: {
-              numeroCommessa: "1",
-              nomeCommessa: this.modal.commessa,
-            },
+            descrIntervento: this.modalInsert.descrIntervento,
+            trimestre: this.modalInsert.trimestre,
+            operatore: this.modalInsert.operatore,
+            stima: this.modalInsert.stima,
+            effort: this.modalInsert.effort,
+            commessa: this.modalInsert.commessa,
             statoIntervento: "Pianificato",
-            inLavorazione: false,
-            // dataInizio: this.modal.dataInizio,
-            // dataFine: this.modal.dataFine
+            inLavorazione: false
           })
           .then((response) => {
             // console.log('response: ', response.data.projects);
-            this.model = {
+            this.modalInsert = {
               commessa: "",
               stima: "",
               effort: "",
               trimestre: "",
-              operatore: "",
-              // dataInizio: "",
-              // dataFine: ""
+              operatore: ""
             };
             this.updateProject = null;
             this.cercaInterventi(this.filters);
@@ -567,43 +509,34 @@ export default {
           });
       }
     },
-    deleteProject(idIntervento) {
+    openDeleteProject(progetto) {
+      this.deletedProject = toRaw(progetto);
+    },
+    deleteProject(id) {
+      this.deleteProjectDialog = false;
       event.preventDefault();
       // const deleteProject = toRaw(progetto);
-      return axios
+      /*return axios
         .post(`http://127.0.0.1:3000/project/delete_project`, {
-          idIntervento,
+          id,
         })
         .then((response) => {
           console.log("response: ", response.data.deletedProject);
           this.cercaInterventi(this.filters);
-        });
+        });*/
     },
-    showModal(modifica, progetto) {
-      this.isModalVisible = true;
-      this.isUpdateMode = modifica;
-      if (progetto) {
-        this.updateProject = toRaw(progetto);
-        this.modal = {
-          commessa: this.updateProject.commessa.nomeCommessa,
-          stima: this.updateProject.stima,
-          effort: this.updateProject.effort,
-          trimestre: this.updateProject.trimestre,
-          operatore: this.updateProject.operatore.id,
-        };
-      }
-    },
-    closeProjectModal() {
-      this.isCloseProjectModal = false;
+    getProject(progetto) {
+      this.modalEdit = {
+        commessa: progetto.nomeCommessa,
+        operatore: progetto.operatore._id,
+        effort: progetto.effort,
+        stima: progetto.stima,
+        trimestre: progetto.trimestre
+      };
     },
     closeProject(progetto) {
-      this.isCloseProjectModal = true;
       this.getComboStatiChiusura();
       this.closedProject = toRaw(progetto);
-    },
-    closeModalInsert() {
-      console.log("here");
-      this.isModalVisible = false;
     },
     updateStatoChiusuraIntervento() {
       event.preventDefault();
@@ -725,49 +658,7 @@ export default {
       // Salva l'oggetto progetto nella sessione
       sessionStorage.setItem("progetto", JSON.stringify(progetto));
       this.$router.push("/rapportini");
-    },
-    //viewRapportino(rapportino) { },
-    /*nuovoRapportino() {
-      this.loadingRap = true;
-      setTimeout(() => {
-        this.modelRap.operatore = '';
-        this.modelRap.dataRapportino = new Date();
-        this.modelRap.descrizioneRapportino = '';
-        this.modelRap.oreRapportino = 8;
-        this.modelRap.minutiRapportino = 0;
-      }, 2000)
-    },*/
-    /*getOreTotaliRapportinate(rapportini) {
-      let sommaOre = 0;
-      let sommaMinuti = 0;
-
-      rapportini.forEach((r) => {
-        sommaOre += r.ore;
-        sommaMinuti += r.minuti;
-      });
-
-      let ore = sommaOre;
-      let minuti = sommaMinuti;
-
-      // Aggiungi un'ora se i minuti superano 60
-
-      if (minuti >= 60) {
-        ore++;
-        minuti -= 60;
-      }
-
-      // Formatta la stringa data
-
-      let data = `${ore}:${minuti}`;
-
-      // Aggiungi un 0 davanti ai minuti se sono meno di 10
-
-      if (minuti < 10) {
-        data = `${ore}:0${minuti}`;
-      }
-
-      return data;
-    }*/
+    }
   },
 };
 </script>
@@ -784,7 +675,7 @@ export default {
 
 .dashboard form,
 .content {
-  padding: 0 60px;
+  padding: 0 50px;
 }
 
 .dashboard form input {

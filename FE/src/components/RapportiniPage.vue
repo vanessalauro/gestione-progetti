@@ -2,9 +2,12 @@
     <header id="header-rapportini" class="bg-light">
         <div class="row p-3">
             <div class="col-sm-1">
-                <button type="button" class="btn btn-primary" @click="goBack()">
+                <v-btn @click="goBack()">
                     <i class="mdi mdi-arrow-left"></i>
-                </button>
+                </v-btn>
+                <!--<button type="button" class="btn btn-primary" @click="goBack()">
+                    <i class="mdi mdi-arrow-left"></i>
+                </button>-->
             </div>
             <div class="col-sm-6 mt-3">
                 Rapportini di Sviluppo {{ progettoInfo?.idIntervento }} -
@@ -12,36 +15,48 @@
             </div>
             <div class="col-sm-5 mt-3 text-right">
                 <span>Le ore rapportinate sono
-                    {{ rapportini.length > 0 ? oreTotaliRapportinate : '0:00' }} quelle stimate {{ progettoInfo?.effort * 8 }}:00 </span>
+                    {{ rapportini.length > 0 ? oreTotaliRapportinate : '0:00' }} quelle stimate {{ progettoInfo?.effort * 8
+                    }}:00
+                </span>
             </div>
         </div>
     </header>
     <div class="row mt-4 mb-4">
-        <div class="col-sm-2 border-right bg-light">
-            <div class="row">
+        <div class="col-sm-2 border-right bg-light text-center">
+            <div class="row" style="min-height: 500px">
                 <div class="col-sm-12">
-                    <div class="row" style="min-height: 500px">
-                        <div class="col-sm-12">
-                            <div class="btn-group-vertical m-2">
-                                <button class="btn btn-primary p-3" v-for="rapportino in rapportini"
-                                    :key="rapportino" @click="viewRapportino(rapportino)">
-                                    {{ rapportino._id.substring(0, 10) }} -
-                                    {{ formatDate(rapportino.dataRapportino) }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 text-center">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="nuovoRapportino()">
-                                <i class="mdi mdi-note-outline"></i>Nuovo Rapportino
-                            </button>
+                    <div class="btn-group-vertical m-2" role="group">
+                        <!--<button class="btn btn-primary p-3 btn-check" v-for="rapportino in rapportini" :key="rapportino"
+                            @click="viewRapportino(rapportino)">
+                            {{ rapportino._id.substring(0, 10) }} -
+                            {{ formatDate(rapportino.dataRapportino) }}
+                        </button>-->
+                        <div v-for="rapportino in rapportini">
+                            <v-btn class="mt-2" @click="viewRapportino(rapportino)">
+                                {{ rapportino._id.substring(0, 10) }} - {{ formatDate(rapportino.dataRapportino) }}
+                            </v-btn>
+                            <!--<input type="radio" class="btn-check" name="btnradio" @click="viewRapportino(rapportino)"
+                                :id="'btnradio' + rapportino._id.substring(0, 10)" autocomplete="off" checked>
+                            <label class="btn btn-primary p-3" :for="'btnradio' + rapportino._id.substring(0, 10)">
+                                {{ rapportino._id.substring(0, 10) }} -
+                                {{ formatDate(rapportino.dataRapportino) }}
+                            </label>-->
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <v-btn data-dismiss="modal" @click="nuovoRapportino()">
+                        <i class="mdi mdi-note-outline"></i>Nuovo Rapportino
+                    </v-btn>
+                    <!--<button type="button" class="btn btn-secondary" data-dismiss="modal" @click="nuovoRapportino()">
+                        <i class="mdi mdi-note-outline"></i>Nuovo Rapportino
+                    </button>-->
+                </div>
+            </div>
         </div>
-        <div class="col-sm-10 bg-light">
+        <div class="col-sm-9 bg-light">
             <div class="row m-auto p-5 text-center" v-if="loadingRap">
                 <div class="col-sm-12">
                     <i class="mdi mdi-loading mdi-spin mdi-48px"></i>
@@ -53,7 +68,7 @@
                         <div class="col-sm-2">
                             <span class="key color-light">Id Rapportino</span>
                         </div>
-                        <div class="col-sm-8">{{ modelRap.idRapportino }}</div>
+                        <div class="col-sm-8">{{ modelRap.idRapportino.substring(0,10) }}</div>
                     </div>
                     <div class="row mt-3 mb-2">
                         <div class="col-sm-2">
@@ -73,9 +88,9 @@
                             <span class="key color-light">Operatore</span>
                         </div>
                         <div class="col-sm-4">
-                            <select class="form-control" id="operatore" v-model="modelRap.operatore.username">
+                            <select class="form-control" id="operatore" v-model="modelRap.operatore">
                                 <option value="" disabled selected>Operatore</option>
-                                <option v-for="op in comboOperatori" :value="op.id">
+                                <option v-for="op in comboOperatori" :value="op._id">
                                     {{ op.nome }} {{ op.cognome }}
                                 </option>
                             </select>
@@ -116,32 +131,72 @@
                     </div>
                     <div class="row mt-3 mb-2">
                         <div class="col-sm-2">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            <v-btn data-dismiss="modal" v-if="modelRap && modelRap.idRapportino && modelRap.idRapportino.length">
+                                <i class="mdi mdi-close"></i>Cancella
+
+                                <v-dialog v-model="deleteRapportinoDialog" activator="parent" width="500">
+                                    <v-card>
+                                        <v-card-title>
+                                            <span class="headline">Elimina rapportino</span>
+                                        </v-card-title>
+                                        <v-card-body>
+                                            <div class="form-group m-4">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <p>Sicuro di voler cancellare il rapportino?</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </v-card-body>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn color="blue-darken-1" variant="text"
+                                                @click="deleteRapportinoDialog = false">
+                                                Annulla
+                                            </v-btn>
+                                            <v-btn color="blue-darken-1" variant="text"
+                                                @click="deleteRapportino()">
+                                                Conferma
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                            </v-btn>
+                            <v-btn data-dismiss="modal" v-if="!modelRap.idRapportino" @click="resetRapportino()">
+                                <i class="mdi mdi-close"></i>Cancella
+                            </v-btn>
+                            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal"
                                 @click="cancellaModaleRapportino()">
                                 <i class="mdi mdi-close"></i>Cancella
-                            </button>
+                            </button>-->
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <footer id="footer-rapportini" class="bg-light">
-        <button type="button" class="btn btn-primary m-3 float-right" data-dismiss="modal"
+        <v-btn class="m-3 float-right" data-dismiss="modal" color="#5fcdcd" @click="confermaModaleRapportino()">
+            <i class="mdi mdi-note-outline"></i>Conferma
+        </v-btn>
+        <v-btn class="m-3 float-right" data-dismiss="modal" @click="annullaModaleRapportino()">
+            <i class="mdi mdi-note-outline"></i>Annulla
+        </v-btn>
+        <!--<button type="button" class="btn btn-primary m-3 float-right" data-dismiss="modal"
             @click="confermaModaleRapportino()">
             <i class="mdi mdi-note-outline"></i>Conferma
         </button>
         <button type="button" class="btn btn-secondary m-3 float-right" data-dismiss="modal"
             @click="annullaModaleRapportino()">
             <i class="mdi mdi-note-outline"></i>Annulla
-        </button>
+        </button>-->
     </footer>
 </template>
 
 <script>
 import axios from "axios";
 import moment from "moment";
+import { toRaw } from "vue";
 
 export default {
     name: "RapportiniPage",
@@ -160,7 +215,10 @@ export default {
             loadingRap: false,
             comboOperatori: [],
             rapportini: [],
-            oreTotaliRapportinate: ""
+            oreTotaliRapportinate: "",
+            rawRapportino: null,
+            deleteRapportinoDialog: false,
+            idRapportinoRaw: ""
         }
 
     },
@@ -179,35 +237,92 @@ export default {
     methods: {
         nuovoRapportino() {
             this.loadingRap = true;
-            this.setModel();
+            setTimeout(() => {
+                this.setModel();
+                this.loadingRap = false;
+            }, 2000);
         },
         confermaModaleRapportino() {
             // inserimento del rapportino
             this.loadingRap = true;
-            return axios.put("http://127.0.0.1:3000/nuovoRapportino", {
-                progetto: this.progettoInfo,
-                rapportinoDaInserire: this.modelRap
+            if (this.modelRap.idRapportino) { // edit
+                return axios.post("http://127.0.0.1:3000/editRapportino", {
+                    rapportinoDaModificare: {
+                        idRapportino: this.rawRapportino._id,
+                        idProgetto: this.progettoInfo._id,
+                        operatore: this.modelRap.operatore,
+                        commessa: this.progettoInfo.commessa,
+                        dataRapportino: moment(new Date(this.modelRap.dataRapportino)).format("YYYY-MM-DD"),
+                        descrizioneRapportino: this.modelRap.descrizioneRapportino,
+                        oreRapportino: this.modelRap.oreRapportino,
+                        minutiRapportino: this.modelRap.minutiRapportino
+                    },
                 }).then((response) => {
-                    console.log("Risposta PUT:", response.data);
+                    console.log("Risposta POST:", response.data);
                     setTimeout(() => {
+                        this.getRapportiniByProjectId();
                         this.setModel();
-
                         this.loadingRap = false;
                     }, 2000)
                 })
-                .catch((error) => {
-                    console.log("Errore:", error);
-                });
+                    .catch((error) => {
+                        console.log("Errore:", error);
+                    });
+            } else { // insert
+                return axios.put("http://127.0.0.1:3000/nuovoRapportino", {
+                    rapportinoDaInserire: {
+                        idProgetto: this.progettoInfo._id,
+                        operatore: this.modelRap.operatore,
+                        commessa: this.progettoInfo.commessa,
+                        dataRapportino: moment(new Date(this.modelRap.dataRapportino)).format("YYYY-MM-DD"),
+                        descrizioneRapportino: this.modelRap.descrizioneRapportino,
+                        oreRapportino: this.modelRap.oreRapportino,
+                        minutiRapportino: this.modelRap.minutiRapportino
+                    }
+                }).then((response) => {
+                    console.log("Risposta PUT:", response.data);
+                    setTimeout(() => {
+                        this.getRapportiniByProjectId();
+                        this.setModel();
+                        this.loadingRap = false;
+                    }, 2000)
+                })
+                    .catch((error) => {
+                        console.log("Errore:", error);
+                    });
+            }
+
 
         },
         annullaModaleRapportino() {
             this.setModel();
         },
-        cancellaModaleRapportino() {
+        resetRapportino() {
             this.setModel();
         },
+        deleteRapportino() {
+            this.deleteRapportinoDialog = false;
+            axios.post("http://127.0.0.1:3000/deleteRapportino", {
+                idRapportino: this.idRapportinoRaw
+            }).then((response) => {
+                console.log("Risposta DELETE:", response.data);
+                this.getRapportiniByProjectId();
+            }).catch((error) => {
+                console.log("Errore:", error);
+            });
+        },
         viewRapportino(rapportino) {
-            this.modelRap = rapportino;
+            this.rawRapportino = toRaw(rapportino);
+            this.idRapportinoRaw = this.rawRapportino._id;
+            this.modelRap = {
+                idRapportino: this.rawRapportino._id.substring(0, 10),
+                commessa: this.progettoInfo.commessa,
+                operatore: this.rawRapportino.operatore,
+                descrizioneRapportino: this.rawRapportino.descrizioneRapportino,
+                oreRapportino: this.rawRapportino.oreRapportino,
+                minutiRapportino: this.rawRapportino.minutiRapportino,
+                dataRapportino: moment(new Date(this.rawRapportino.dataRapportino)).format("YYYY-MM-DD"),
+            };
         },
         getOreTotaliRapportinate() {
             let sommaOre = 0;
@@ -258,7 +373,7 @@ export default {
             this.modelRap = {
                 idRapportino: "",
                 commessa: this.progettoInfo.commessa,
-                operatore: "",
+                operatore: this.progettoInfo.operatore._id,
                 dataRapportino: moment(new Date()).format("YYYY-MM-DD"),
                 descrizioneRapportino: "",
                 oreRapportino: 8,
@@ -271,14 +386,15 @@ export default {
                 params: {
                     idProgetto: this.progettoInfo._id
                 }
-                }).then((response) => {
-                    console.log("Risposta GET:", response.data);
-                    setTimeout(() => {
-                        this.rapportini = response.data.rapportini;
-                        this.oreTotaliRapportinate = this.getOreTotaliRapportinate();
-                        this.loadingRap = false;
-                    }, 2000);
-                })
+            }).then((response) => {
+                console.log("Risposta GET:", response.data);
+                setTimeout(() => {
+                    this.rapportini = response.data.rapportini;
+                    this.oreTotaliRapportinate = this.getOreTotaliRapportinate();
+                    this.loadingRap = false;
+                    this.setModel();
+                }, 2000);
+            })
                 .catch((error) => {
                     console.log("Errore:", error);
                 });

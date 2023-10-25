@@ -31,7 +31,7 @@ const projectController = {
     try {
       const { idIntervento, inLavorazione, statoIntervento } = req.body;
 
-      console.log('idIntervento: ', idIntervento, 'inLavorazione: ', inLavorazione, 'statoIntervento: ', statoIntervento);
+      // console.log('idIntervento: ', idIntervento, 'inLavorazione: ', inLavorazione, 'statoIntervento: ', statoIntervento);
 
       const updatedProject = await ProjectService.updateLavorazione(idIntervento, inLavorazione, statoIntervento);
       if (updatedProject) {
@@ -50,9 +50,11 @@ const projectController = {
     try {
       const newProject = req.body;
 
-      console.log('newProject: ', newProject);
+      // console.log('newProject: ', newProject);
 
       const insertProject = await ProjectService.createProject(newProject);
+
+      console.log('insertProject: ', insertProject);
       if (insertProject) {
         // console.log('getProjectsByParams : ', res.json({ projects: projects }));
         return res.json({ insertProject: insertProject });
@@ -79,8 +81,8 @@ const projectController = {
       const updateProject = req.body;
       const { idIntervento } = updateProject;
 
-      console.log('updateProject: ', updateProject);
-      console.log('idIntervento: ', idIntervento);
+      //console.log('updateProject: ', updateProject);
+      //console.log('idIntervento: ', idIntervento);
 
       const updatedProject = await ProjectService.updateProject(idIntervento, updateProject);
       if (updatedProject) {
@@ -97,7 +99,7 @@ const projectController = {
   async deleteProject(req, res) {
     try {
       const { idIntervento } = req.body;
-      console.log('idIntervento: ', idIntervento);
+      // console.log('idIntervento: ', idIntervento);
       const deletedProject = await ProjectService.deleteProject(idIntervento);
       if (deletedProject) {
         // console.log('getProjectsByParams : ', res.json({ projects: projects }));
@@ -114,7 +116,7 @@ const projectController = {
   async closeIntervento(req, res) {
     try {
       const { idIntervento, statoIntervento } = req.body;
-      console.log('idIntervento: ', idIntervento);
+      // console.log('idIntervento: ', idIntervento);
       const closedProject = await ProjectService.closeIntervento(idIntervento, statoIntervento);
       if (closedProject) {
         // console.log('getProjectsByParams : ', res.json({ projects: projects }));
@@ -130,10 +132,10 @@ const projectController = {
 
   async nuovoRapportino(req, res) {
     try {
-      const { progetto, rapportinoDaInserire } = req.body;
+      const { rapportinoDaInserire } = req.body;
       // console.log('progetto: ', progetto);
       // console.log('rapportinoDaInserire: ', rapportinoDaInserire);
-      const nuovoRapportino = await ProjectService.nuovoRapportino(progetto, rapportinoDaInserire);
+      const nuovoRapportino = await ProjectService.nuovoRapportino(rapportinoDaInserire);
       if (nuovoRapportino) {
         // console.log('getProjectsByParams : ', res.json({ projects: projects }));
         return res.json({ nuovoRapportino: nuovoRapportino });
@@ -146,16 +148,50 @@ const projectController = {
     }
   },
 
+  async updateRapportino(req, res) {
+    try {
+      const { rapportinoDaModificare } = req.body;
+      // console.log('rapportinoDaModificare :', rapportinoDaModificare);
+      const updateRapportino = await ProjectService.updateRapportino(rapportinoDaModificare);
+      if (updateRapportino) {
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
+        return res.json({ updateRapportino: updateRapportino });
+      } else {
+        return res.json({ error: 'Errore nel db' });
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  },
+
   async getRapportini(req, res) {
     try {
       const idProgetto = req.query.idProgetto;
-      console.log('idProgetto: ', idProgetto);
+      // console.log('idProgetto: ', idProgetto);
       const rapportini = await ProjectService.getRapportini(idProgetto);
       if (rapportini) {
         // console.log('getProjectsByParams : ', res.json({ projects: projects }));
         return res.json({ rapportini: rapportini });
       } else {
         return res.json({ error: 'Errore nel db' });  
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  },
+
+  async deleteRapportino(req, res) {
+    try {
+      const { idRapportino } = req.body;
+      // console.log('idRapportino: ', idRapportino);
+      const deletedRapportino = await ProjectService.deleteRapportino(idRapportino);
+      if (deletedRapportino) {
+        // console.log('getProjectsByParams : ', res.json({ projects: projects }));
+        return res.json({ deletedRapportino: deletedRapportino });
+      } else {
+        return res.json({ error: 'Errore nel db' });
       }
     } catch (error) {
       console.log(error);

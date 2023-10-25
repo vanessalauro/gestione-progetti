@@ -5,10 +5,10 @@
     <div class="card">
       <div class="card-body">
         <div class="row m-auto p-5 text-center" v-if="loading">
-            <div class="col-sm-12">
-              <i class="mdi mdi-loading mdi-spin mdi-48px"></i>
-            </div>
+          <div class="col-sm-12">
+            <i class="mdi mdi-loading mdi-spin mdi-48px"></i>
           </div>
+        </div>
       </div>
       <div class="card-body" v-if="(notifications.length === 0 && !loading)">
         <div class="row m-auto p-5 text-center">
@@ -18,10 +18,13 @@
         </div>
       </div>
       <div class="card-body" v-if="(notifications.length > 0 && !loading)">
+        <div class="text-center">
+          <v-pagination v-model="page" :length="Math.ceil(notifications.length / 10)" rounded="circle"></v-pagination>
+        </div>
         <table class="table table-hover text-center">
           <thead>
             <tr>
-              <th scope="col" class="table-header"></th>
+              <!--<th scope="col" class="table-header"></th>-->
               <th scope="col" class="table-header">ID Notifica</th>
               <th scope="col" class="table-header">Descrizione notifica</th>
               <th scope="col" class="table-header">Data notifica</th>
@@ -30,10 +33,10 @@
           </thead>
           <tbody>
             <tr v-for="notification in notifications" :key="notification.id">
-              <td>
+              <!--<td>
                 <i v-if="!notification.read" class="mdi mdi-circle" style="font-size: 10px;"></i>
-              </td>
-              <td>{{ notification.id }}</td>
+              </td>-->
+              <td>{{ notification._id.substring(0, 10) }}</td>
               <td>{{ notification.body }}</td>
               <td>{{ formatDate(notification.dataNotifica) }}</td>
               <td>{{ notification.operatore.cognome }} {{ notification.operatore.nome }}</td>

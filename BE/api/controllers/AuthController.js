@@ -9,7 +9,7 @@ const authController = {
   async registerUser(req, res) {
     try {
       const body = JSON.parse(req.body.body);
-      console.log('body:', req.body.body);
+      // console.log('body:', req.body.body);
       const user = await AuthService.registerUser(body);
 
       if (user) {

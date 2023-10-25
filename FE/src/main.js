@@ -1,53 +1,34 @@
-/*import './assets/main.css';
-import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-import { createApp } from 'vue';
-import BootstrapVue from "bootstrap-vue";
-import App from './App.vue';
-import router from './router';
-import { createVuetify } from 'vuetify';
-import Navbar from './shared/Navbar.vue';
-import Footer from './shared/Footer.vue';
-// Importa il file CSS di @mdi/font
-import '@mdi/font/css/materialdesignicons.min.css';
-import 'vuetify/dist/vuetify.min.css'; // Importa i CSS di Vuetify
-
-const app = createApp(App);
-app.use(BootstrapVue);
-app.component('b-table', BootstrapVue.BTable);
-
-// Registra i componenti Navbar e Footer come globali
-app.component('Navbar', Navbar);
-app.component('Footer', Footer);
-
-app.use(router);
-app.use(createVuetify());
-
-app.mount('#app');*/
-
 import './assets/main.css';
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-import { createVuetify } from 'vuetify';
 import Navbar from './shared/Navbar.vue';
 import Footer from './shared/Footer.vue';
 // Importa il file CSS di @mdi/font
 import '@mdi/font/css/materialdesignicons.min.css';
 import 'vuetify/dist/vuetify.min.css'; // Importa i CSS di Vuetify
-// import BootstrapVue from "bootstrap-vue";
+import { createVfm } from 'vue-final-modal';
+import 'vue-final-modal/style.css';
+
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+// import 'vuetify/dist/vuetify.min.css';
 
 const app = createApp(App);
 
-// Carica il componente Vuetify prima del componente b-table
-app.use(createVuetify());
+const vuetify = createVuetify({
+    components,
+    directives,
+});
 
-/*app.use(BootstrapVue);
-app.component('b-table', BootstrapVue.BTable);*/
+app.use(vuetify);
+
+const vfm = createVfm()
+app.use(vfm);
 
 // Registra i componenti Navbar e Footer come globali
 app.component('Navbar', Navbar);

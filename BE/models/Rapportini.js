@@ -1,14 +1,20 @@
 const mongoose = require("mongoose");
-const userSchema = require("./User");
-const progettoSchema = require("./Commessa");
+const commessaSchema = require("./Commessa");
 
 // Project
 const rapportiniSchema = new mongoose.Schema({
-    progetto: {
-        type: progettoSchema
+    progressivo: {
+        type: String,
+        unique: true
+    },
+    idProgetto: {
+        type: String
+    },
+    commessa: {
+        type: commessaSchema
     },
     operatore: {
-        type: userSchema
+        type: String
     },
     dataRapportino: {
         type: Date
@@ -22,6 +28,6 @@ const rapportiniSchema = new mongoose.Schema({
     minutiRapportino: {
         type: Number
     }
-}, { collection: "rapportini" }); 
+}, { collection: "rapportini" });
 
 module.exports = rapportiniSchema;

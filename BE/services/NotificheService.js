@@ -4,7 +4,7 @@ const Operatore = require("../models/User");
 
 class NotificheService {
     constructor() {
-        this.notificheModel = mongoose.model("Notifiche", Notifiche)
+        this.notificheModel = mongoose.model("Notifiche", Notifiche);
         this.operatoreModel = mongoose.model("Operatore", Operatore);
     }
 
@@ -15,7 +15,7 @@ class NotificheService {
             .populate("operatore")
             .exec();
 
-        console.log("notifiche: ", notifiche);
+        // console.log("notifiche: ", notifiche);
 
         if (notifiche && notifiche.length > 0) {
             for (let i = 0; i < notifiche.length; i++) {

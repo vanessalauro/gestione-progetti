@@ -4,27 +4,17 @@
             "idIntervento": "I001",
             "descrIntervento": "Intervento 1",
             "trimestre": "T2",
-            "rapportini": [
-                {
-                    "idRapportino": "000000",
-                    "dataRapportino": "2022-01-01T00:00:00.000Z",
-                    "descrizioneRapportino": ""
-                }
-            ],
             "operatore": {
-                "nome": "mario",
-                "cognome": "rossi",
-                "email": "mario@mail.it",
-                "username": "user2",
-                "password": "password2",
-                "admin": false,
-                "manager": false
+                "_id": {
+                    "$oid": "64ac0711ea15e42d36f1ead4"
+                }
             },
             "stima": "Stima 1",
             "effort": "Effort 1",
             "commessa": {
-                "numeroCommessa": "1",
-                "nomeCommessa": "Commessa 1"
+                "_id": {
+                    "$oid": "64ac06ceea15e42d36f1eab6"
+                }
             },
             "statoIntervento": "In Lavorazione",
             "inLavorazione": true,

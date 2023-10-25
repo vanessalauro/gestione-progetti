@@ -3,6 +3,10 @@ const userSchema = require("./User");
 const commessaSchema = require("./Commessa");
 
 const progettiSchema = new mongoose.Schema({
+  progressivo: {
+    type: String,
+    unique: true
+  },
   descrIntervento: {
     type: String
   },

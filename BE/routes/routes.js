@@ -40,6 +40,8 @@ router.route('/rapportini')
     .get((req, res) => projectController.getRapportini(req, res));
 router.route('/editRapportino')
     .post((req, res) => projectController.updateRapportino(req, res));
+router.route('/deleteRapportino')
+    .post((req, res) => projectController.deleteRapportino(req, res));
 
 // combo
 router.route('/team')
