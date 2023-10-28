@@ -135,7 +135,7 @@ export default {
           }
           localStorage.setItem('username', userLogged.username);
           localStorage.setItem('password', userLogged.password);
-          localStorage.setItem('token', userLogged.token);
+          localStorage.setItem('Authorization', 'Bearer ' + userLogged.token);
           this.$router.push("/container/dashboard");
           console.log($router)
         })

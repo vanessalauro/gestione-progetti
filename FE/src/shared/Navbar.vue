@@ -80,7 +80,7 @@
     
     <v-btn icon @click="goToNotifiche()">
       <i class="mdi mdi-bell"></i>
-      <span class="badge">3</span>
+      <span class="badge">{{ countNotifiche }}</span>
     </v-btn>
 
     <v-btn icon @click="logout()">
@@ -96,14 +96,17 @@ export default {
   name: "Navbar",
   data() {
     return {
-      countNotificheDaLeggere: 0
+      countNotifiche: 0
     }
   },
+  mounted() {
+    this.getCountNotifiche();
+  },
   methods: {
-    getCountNotificheDaLeggere() {
-      axios.get("http://localhost:3000/notificheDaLeggere").then((response) => {
+    getCountNotifiche() {
+      axios.get("http://localhost:3000/countNotifiche").then((response) => {
         console.log("Risposta GET:", response.data);
-        this.countNotificheDaLeggere = response.data.count;
+        this.countNotifiche = response.data.count;
       });
     },
     goToNotifiche() {
@@ -113,9 +116,17 @@ export default {
       this.$router.push("/container/dashboard");
     },
     logout() {
+      // Effettua il logout
+      const username = localStorage.getItem("username");
+      const password = localStorage.getItem("password");
+      const authorization = localStorage.getItem("Authorization");
+
       // Logica per eseguire il logout dell'utente
       // Puoi implementare qui la tua logica per il logout
-      axios.post("http://localhost:3000/logout").then(() => {
+      axios.post("http://localhost:3000/logout", { username, password, authorization }).then(() => {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+        localStorage.removeItem("Authorization");
         // Redirect to the login page
         this.$router.push("/login");
       });

@@ -59,7 +59,7 @@ router.route('/commessa')
 // notifiche
 router.route('/caricaNotifiche')
     .get((req, res) => notificheController.getNotifiche(req, res));
-router.route('/notificheDaLeggere')
-    .get((req, res) => notificheController.getNotificheDaLeggere(req, res));
+router.route('/countNotifiche')
+    .get((req, res) => notificheController.getNotificheCount(req, res));
 
 module.exports = router;

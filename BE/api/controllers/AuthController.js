@@ -2,6 +2,7 @@
 const express = require("express");
 const AuthService = require("../../services/AuthService");
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = 'projectmanagment2023!';
 
 const router = express.Router();
 
@@ -62,18 +63,44 @@ const authController = {
       return jwt.sign(payload, secret, { expiresIn: expiresIn });
     };
 
-    const secret = 'projectmanagement2023';
-    const token = generateToken(user, secret, '1h');
+    const token = generateToken(user, JWT_SECRET, '1h');
 
     return token;
   },
-  logoutUser(req, res) {
-    // Log the user out
-    // console.log(req.session);
+  async logoutUser(req, res) {
+    // Ottieni il token di accesso dall'header della richiesta
+   //  console.log(req.body.authorization);
+    const token = req.body.authorization.split('Bearer ')[1];
+
+    // Verifica il token di accesso
+    const decodedToken = this.verifyToken(token);
+
+    // Elimina i dati di sessione dell'utente dal server
     req.session.destroy();
 
-    // Redirect to the login page
-    res.redirect("/login");
+    // Rimuovi il token di accesso dall'header della risposta
+    res.setHeader('Authorization', '');
+
+    // Ritorna un messaggio di successo
+    res.send({
+      message: 'Logout riuscito'
+    });
+  },
+
+  async verifyToken(token) {
+  
+    try {
+      const decodedToken = jwt.verify(token, JWT_SECRET);
+      return decodedToken;
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError) {
+        // Il token JWT non è valido
+        throw new Error('Invalid token');
+      } else {
+        // Errore imprevisto
+        throw error;
+      }
+    }
   }
 }
 

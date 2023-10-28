@@ -53,7 +53,6 @@ const comboController = {
         try {
             const commessa = await ComboService.getAllCommesse();
             if (commessa && commessa.length > 0) {
-                // console.log(commessa);
                 return res.json({commessa: commessa});
             } else {
                 console.log('Nessuna commessa trovata nel db');

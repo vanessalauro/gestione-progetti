@@ -28,11 +28,10 @@ class NotificheService {
         }
     }
 
-    async getNotificheDaLeggere() {
-        const notifiche = await this.notificheModel.find({
-            read: false
-        });
-        return notifiche.length;
+    getNotificheCount() {
+        const query = this.notificheModel.find();
+
+        return query.count();
     }
 }
 

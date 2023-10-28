@@ -11,8 +11,14 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-3 mt-2">
-              <input class="form-control" type="text" id="numeroCommessa" placeholder="Numero Commessa"
-                v-model="filters.numeroCommessa" />
+              <!--<input class="form-control" type="text" id="numeroCommessa" placeholder="Numero Commessa"
+                v-model="filters.numeroCommessa" />-->
+              <select class="form-control" id="commessa" v-model="filters.commessa">
+                <option value="" disabled selected>Commessa</option>
+                <option v-for="comm in comboCommessa" :value="comm._id">
+                  {{ comm.nomeCommessa }}
+                </option>
+              </select>
             </div>
             <div class="col-md-3 mt-2">
               <input class="form-control" type="text" id="idIntervento" placeholder="ID Intervento"
@@ -67,7 +73,7 @@
               <v-btn class="icon-button">
                 <i class="mdi mdi-plus"></i>
                 <v-dialog v-model="insertDialog" activator="parent" width="1024">
-                  {{  modalInsert }}
+                  {{ modalInsert }}
                   <v-card>
                     <v-card-title>
                       <span class="headline">Nuovo Intervento</span>
@@ -78,8 +84,14 @@
                           v-model="modalInsert.descrIntervento" :disabled="isDisabled" />
                       </div>
                       <div class="form-group m-4">
-                        <input type="text" class="form-control" placeholder="N. Commessa" id="commessa"
-                          v-model="modalInsert.commessa" :disabled="isDisabled" />
+                        <!--<input type="text" class="form-control" placeholder="N. Commessa" id="commessa"
+                          v-model="modalInsert.commessa" :disabled="isDisabled" />-->
+                        <select class="form-control" id="commessa" v-model="modalInsert.commessa" placeholder="Commessa">
+                          <option value="" disabled selected>Commessa</option>
+                          <option v-for="comm in comboCommessa" :value="comm._id">
+                            {{ comm.nomeCommessa }}
+                          </option>
+                        </select>
                       </div>
                       <div class="form-group m-4">
                         <div class="row">
@@ -97,7 +109,7 @@
                         <div class="row">
                           <div class="col-md-3">
                             <select class="form-control" id="trimestre" v-model="modalInsert.trimestre"
-                              :disabled="isDisabled">
+                              :disabled="isDisabled" placeholder="Trimestre">
                               <option value="" disabled selected>Trimestre</option>
                               <option v-for="trim in comboTrimestri" :value="trim.value">
                                 {{ trim.label }}
@@ -110,12 +122,30 @@
                         <div class="row">
                           <div class="col-md-3">
                             <select class="form-control" id="operatore" v-model="modalInsert.operatore"
-                              :disabled="isDisabled">
+                              placeholder="Operatore" :disabled="isDisabled">
                               <option value="" disabled selected>Operatore</option>
                               <option v-for="op in comboOperatori" :value="op._id">
                                 {{ op.nome }} {{ op.cognome }}
                               </option>
                             </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group m-4">
+                        <div class="row" style="vertical-align: middle;">
+                          <div class="col-md-4">
+                            <label>Data inizio</label>
+                            <input type="date" class="form-control" v-model="modalInsert.dataInizio"
+                              placeholder="Data inizio">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group m-4">
+                        <div class="row" style="vertical-align: middle;">
+                          <div class="col-md-4">
+                            <label>Data fine</label>
+                            <input type="date" class="form-control" v-model="modalInsert.dataFine"
+                              placeholder="Data fine">
                           </div>
                         </div>
                       </div>
@@ -129,7 +159,9 @@
                       <v-btn color="blue-darken-1" variant="text" @click="insertDialog = false">
                         Annulla
                       </v-btn>
-                      <v-btn color="blue-darken-1" variant="text" @click="editInsertProject(false)">
+                      <v-btn color="blue-darken-1" variant="text" 
+                      :disabled="modalInsert.descrIntervento == '' || modalInsert.commessa == '' || modalInsert.trimestre == '' || modalInsert.operatore == '' || modalInsert.dataInizio == '' || modalInsert.dataFine == ''"
+                      @click="editInsertProject(false)">
                         Salva
                       </v-btn>
                     </v-card-actions>
@@ -168,33 +200,44 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="progetto in projects" :key="progetto.id">
+              <tr v-for="progetto in projects" :key="progetto.id" style="vertical-align: middle;">
                 <td>
                   <div class="row">
                     <div class="col-sm-12">
                       <!-- modifica intervento -->
-                      <v-btn class="icon-button" @click="getProject(progetto)">
+                      <v-btn class="icon-button mr-2" @click="getProject(progetto)">
                         <i class="mdi mdi-pencil"></i>
                         <v-dialog v-model="dialogEdit" activator="parent" width="1024">
+                          {{ modalEdit }}
                           <v-card>
                             <v-card-title>
-                              <span class="headline">Modifica Intervento</span>
+                              <span class="headline">Modifica Intervento n. {{ modalEdit.idIntervento }}</span>
                             </v-card-title>
                             <v-card-body>
                               <div class="form-group m-4">
-                                <input type="text" class="form-control" placeholder="N. Commessa" id="commessa"
-                                  v-model="modalEdit.commessa"
+                                <input type="text" class="form-control" placeholder="Nome Intervento" id="intervento"
+                                  v-model="modalEdit.descrIntervento"
                                   :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))" />
+                              </div>
+                              <div class="form-group m-4">
+                                <select class="form-control" id="commessa" v-model="modalEdit.commessa"
+                                  placeholder="Commessa"
+                                  :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))">
+                                  <option value="" disabled selected>Commessa</option>
+                                  <option v-for="comm in comboCommessa" :value="comm._id">
+                                    {{ comm.nomeCommessa }}
+                                  </option>
+                                </select>
                               </div>
                               <div class="form-group m-4">
                                 <div class="row">
                                   <div class="col-sm-3">
-                                    <input type="text" class="form-control" placeholder="Stima" id="stima"
+                                    <input type="number" class="form-control" placeholder="Stima" id="stima"
                                       v-model="modalEdit.stima"
                                       :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))" />
                                   </div>
                                   <div class="col-sm-3">
-                                    <input type="text" class="form-control" placeholder="Effort" id="effort"
+                                    <input type="number" class="form-control" placeholder="Effort" id="effort"
                                       v-model="modalEdit.effort"
                                       :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))" />
                                   </div>
@@ -204,7 +247,8 @@
                                 <div class="row">
                                   <div class="col-md-3">
                                     <select class="form-control" id="trimestre" v-model="modalEdit.trimestre"
-                                      :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))">
+                                      :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))"
+                                      placeholder="Trimestre">
                                       <option value="" disabled selected>Trimestre</option>
                                       <option v-for="trim in comboTrimestri" :value="trim.value">
                                         {{ trim.label }}
@@ -217,6 +261,7 @@
                                 <div class="row">
                                   <div class="col-md-3">
                                     <select class="form-control" id="operatore" v-model="modalEdit.operatore"
+                                      placeholder="Operatore"
                                       :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))">
                                       <option value="" disabled selected>Operatore</option>
                                       <option v-for="op in comboOperatori" :value="op._id">
@@ -226,9 +271,27 @@
                                   </div>
                                 </div>
                               </div>
-                              <!--<div class="form-group m-4">
-                                <label for="documents">Documents </label>
-                              </div>-->
+
+                              <div class="form-group m-4">
+                                <div class="row" style="vertical-align: middle;">
+                                  <div class="col-md-4">
+                                    <label>Data inizio</label>
+                                    <input type="date" class="form-control" v-model="modalEdit.dataInizio"
+                                      :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))"
+                                      placeholder="Data inizio">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group m-4">
+                                <div class="row" style="vertical-align: middle;">
+                                  <div class="col-md-4">
+                                    <label>Data fine</label>
+                                    <input type="date" class="form-control" v-model="modalEdit.dataFine"
+                                      :disabled="((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))"
+                                      placeholder="Data fine">
+                                  </div>
+                                </div>
+                              </div>
                             </v-card-body>
 
                             <v-card-actions>
@@ -244,6 +307,7 @@
                                 Annulla
                               </v-btn>
                               <v-btn color="blue-darken-1" variant="text"
+                                :disabled="modalEdit.descrIntervento === '' || modalEdit.effort === '' || modalEdit.stima === '' || modalEdit.trimestre === '' || modalEdit.operatore === '' || modalEdit.dataInizio === '' || modalEdit.dataFine === ''"
                                 v-if="!((progetto.giorniDiAvanzamento > 0) && (progetto.percentualeAvanzamento > 0))"
                                 @click="editInsertProject(true)">
                                 Salva
@@ -293,17 +357,17 @@
                 <td>{{ progetto.operatore.cognome }} {{ progetto.operatore.nome }}</td>
                 <td>{{ progetto.trimestre }}</td>
                 <td>{{ formatDate(progetto.dataInizio) }}</td>
-                <td>{{ formatDate(progetto.dataInizio) }}</td>
+                <td>{{ formatDate(progetto.dataFine) }}</td>
                 <td>
                   <input type="checkbox"
                     v-bind:disabled="(progetto.giorniDiAvanzamento && progetto.percentualeAvanzamento)"
                     v-model="progetto.inLavorazione" @change="updateLavorazione(progetto)" />
                 </td>
-                <td>{{ progetto.giorniDiAvanzamento }}</td>
-                <td>{{ progetto.percentualeAvanzamento }}%</td>
+                <td>{{ progetto.giorniDiAvanzamento > 0 ? progetto.giorniDiAvanzamento : '' }}</td>
+                <td>{{ progetto.percentualeAvanzamento > 0 ? progetto.percentualeAvanzamento + '%' : '' }}</td>
                 <td>
                   <div>
-                    <v-btn class="icon-button" @click="insertUpdateRapportino(progetto)">
+                    <v-btn class="icon-button mr-2" @click="insertUpdateRapportino(progetto)">
                       <i class="mdi mdi-note-outline"></i>
                     </v-btn>
                     <v-btn class="icon-button" @click="closeProject(progetto)">
@@ -339,7 +403,9 @@
                             <v-btn color="blue-darken-1" variant="text" @click="closeProjectDialog = false">
                               Annulla
                             </v-btn>
-                            <v-btn color="blue-darken-1" variant="text" @click="updateStatoChiusuraIntervento()">
+                            <v-btn color="blue-darken-1" variant="text" 
+                             :disabled="reasonState === ''"
+                            @click="updateStatoChiusuraIntervento()">
                               Conferma
                             </v-btn>
                           </v-card-actions>
@@ -370,33 +436,43 @@ export default {
     return {
       projects: [],
       comboTrimestri: [],
+      comboCommessa: [],
       comboNuclei: [],
       comboTeam: [],
       comboOperatori: [],
       comboStatiInterventi: [],
       loading: false,
       filters: {
-        numeroCommessa: "",
+        commessa: "",
         idIntervento: "",
-        trimestre: "",
+        trimestre: this.getCurrentTrimestre(),
         // team: "",
         // nucleo: "",
         operatore: "",
         statoIntervento: "",
       },
       modalInsert: {
-        commessa: null,
+        commessa: "",
+        descrIntervento: "",
         stima: null,
         effort: null,
-        trimestre: null,
-        operatore: null,
+        trimestre: this.getCurrentTrimestre(),
+        operatore: "",
+        dataInizio: "",
+        dataFine: ""
       },
       modalEdit: {
-        commessa: null,
+        id: "",
+        progessivo: "",
+        idIntervento: null,
+        descrIntervento: "",
+        commessa: "",
         stima: null,
         effort: null,
         trimestre: null,
-        operatore: null
+        operatore: "",
+        dataInizio: "",
+        dataFine: ""
       },
       inLavorazione: false,
       updateIdIntervento: "",
@@ -412,6 +488,7 @@ export default {
     };
   },
   mounted() {
+    this.getComboCommessa();
     this.getComboOperatori();
     this.getComboStatiInterventi();
     this.getComboTrimestri();
@@ -447,27 +524,35 @@ export default {
         this.dialogEdit = false;
         return axios
           .post(`http://127.0.0.1:3000/project`, {
-            idIntervento: this.updateProject.idIntervento,
-            trimestre: this.modalEdit.trimestre,
-            operatore: this.modalEdit.operatore,
-            stima: this.modalEdit.stima,
-            effort: this.modalEdit.effort,
-            commessa: {
-              numeroCommessa: "1",
-              nomeCommessa: this.modalEdit.commessa,
-            },
+            progettoDaModificare: {
+              id: this.modalEdit.id,
+              idIntervento: this.modalEdit.id,
+              progressivo: this.modalEdit.progressivo,
+              descrIntervento: this.modalEdit.descrIntervento,
+              trimestre: this.modalEdit.trimestre,
+              operatore: this.modalEdit.operatore,
+              stima: this.modalEdit.stima,
+              effort: this.modalEdit.effort,
+              commessa: this.modalEdit.commessa,
+              dataInizio: new Date(this.modalEdit.dataInizio),
+              dataFine: new Date(this.modalEdit.dataFine),
+            }
           })
           .then((response) => {
             console.log("response: ", response.data.updateProject);
-            this.model = {
+            this.modalEdit = {
+              id: "",
+              progessivo: "",
+              idIntervento: null,
+              descrIntervento: "",
               commessa: "",
-              stima: "",
-              effort: "",
-              trimestre: "",
+              stima: null,
+              effort: null,
+              trimestre: null,
               operatore: "",
-              // dataInizio: "",
-              // dataFine: ""
-            };
+              dataInizio: "",
+              dataFine: ""
+            }
             this.updateProject = null;
             this.cercaInterventi(this.filters);
           })
@@ -488,7 +573,9 @@ export default {
             effort: this.modalInsert.effort,
             commessa: this.modalInsert.commessa,
             statoIntervento: "Pianificato",
-            inLavorazione: false
+            inLavorazione: false,
+            dataInizio: new Date(this.modalInsert.dataInizio),
+            dataFine: new Date(this.modalInsert.dataFine),
           })
           .then((response) => {
             // console.log('response: ', response.data.projects);
@@ -515,23 +602,29 @@ export default {
     deleteProject(id) {
       this.deleteProjectDialog = false;
       event.preventDefault();
-      // const deleteProject = toRaw(progetto);
-      /*return axios
+      return axios
         .post(`http://127.0.0.1:3000/project/delete_project`, {
           id,
         })
         .then((response) => {
           console.log("response: ", response.data.deletedProject);
           this.cercaInterventi(this.filters);
-        });*/
+        });
     },
     getProject(progetto) {
+
       this.modalEdit = {
-        commessa: progetto.nomeCommessa,
+        id: progetto._id,
+        progressivo: progetto.progessivo,
+        idIntervento: progetto._id.substring(0, 10),
+        descrIntervento: progetto.descrIntervento,
+        commessa: progetto.commessa._id,
         operatore: progetto.operatore._id,
         effort: progetto.effort,
         stima: progetto.stima,
-        trimestre: progetto.trimestre
+        trimestre: progetto.trimestre, 
+        dataInizio: moment(new Date(progetto.dataInizio)).format("YYYY-MM-DD"),
+        dataFine: moment(new Date(progetto.dataFine)).format("YYYY-MM-DD")
       };
     },
     closeProject(progetto) {
@@ -622,7 +715,15 @@ export default {
         this.comboOperatori = ope;
       } else {
         this.comboOperatori = [];
-        alert("Nessun progetto trovato");
+      }
+    },
+    async getComboCommessa() {
+      const response = await axios.get("http://127.0.0.1:3000/commessa");
+      console.log('Risposta GET:', response.data.commessa);
+      if (response.data.commessa.length > 0) {
+        this.comboCommessa = response.data.commessa;
+      } else {
+        this.comboCommessa = [];
       }
     },
     getComboStatiChiusura() {
@@ -647,8 +748,18 @@ export default {
         { value: "T1", label: "" + currentYear + " T1" },
         { value: "T2", label: "" + currentYear + " T2" },
         { value: "T3", label: "" + currentYear + " T3" },
-        { value: "T4", label: "" + currentYear + " T4" },
+        { value: "T4", label: "" + currentYear + " T4" }
       ];
+
+      const currentMonth = new Date().getMonth() + 1;
+      console.log(currentMonth);
+
+      if (currentMonth > 9) {
+        this.comboTrimestri.push({
+          value: "T1", label: "" + (currentYear + 1) + " T1"
+        });
+        this.comboTrimestri.splice(0, 1);
+      }
     },
     formatDate(date) {
       return moment(date).format("DD/MM/YYYY"); // Esempio: 01/01/2022
@@ -658,6 +769,19 @@ export default {
       // Salva l'oggetto progetto nella sessione
       sessionStorage.setItem("progetto", JSON.stringify(progetto));
       this.$router.push("/rapportini");
+    },
+    getCurrentTrimestre() {
+      const currentMonth = new Date().getMonth() + 1;
+
+      if (currentMonth > 0 && currentMonth < 4) { // T1 1-3
+        return "T1";
+      } else if (currentMonth > 3 && currentMonth < 7) { // T2 4-6
+        return "T2";
+      } else if (currentMonth > 6 && currentMonth < 10) { // T3 7-9
+        return "T3";
+      } else if (currentMonth > 9) { // T4 10-12
+        return "T4";
+      }
     }
   },
 };
@@ -718,5 +842,4 @@ export default {
 .dashboard .results li a:hover {
   color: #fff;
   background-color: #ccc;
-}
-</style>
+}</style>

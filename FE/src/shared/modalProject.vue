@@ -1,5 +1,8 @@
 <template>
-  <transition name="modal-fade">
+  <div>
+    <ModalsContainer />
+  </div>
+  <!--<transition name="modal-fade">
     <div class="modal-backdrop">
       <div class="modal modal-lg" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
         <header class="modal-header" id="modalTitle">
@@ -18,20 +21,20 @@
         </footer>
       </div>
     </div>
-  </transition>
+  </transition>-->
 </template>
 <script>
+import { ModalsContainer } from 'vue-final-modal'
+
 export default {
   name: 'ModalProject',
-  methods: {
-    close() {
-      this.$emit('close');
-    },
-  },
-};
+  components: {
+    ModalsContainer
+  }
+}
 </script>
 <style>
-.modal-backdrop {
+/*.modal-backdrop {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -40,19 +43,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
 }
 
 .modal {
-  /*overflow-x: auto;*/
   display: flex;
   margin: auto;
   flex-direction: column;
   background-color: white;
   border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  /*max-width: 80%;
-  max-height: 80%;*/
   overflow-y: auto;
 }
 
@@ -70,7 +69,6 @@ export default {
 
 .modal-footer {
   border-top: 1px solid #eeeeee;
-  /*flex-direction: column;*/
   justify-content: flex-end;
 }
 
@@ -96,5 +94,5 @@ export default {
 .modal-fade-enter-active,
 .modal-fade-leave-active {
   transition: opacity 0.5s ease;
-}
+}*/
 </style>
