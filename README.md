@@ -14,7 +14,7 @@ Questo è un progetto di gestione di progetti che consente di organizzare e tene
 ## Requisiti
 
 - Node.js (versione 18.5.0)
-- MongoDB (versione X.X.X)
+- MongoDB (versione 6.0)
 
 ## Installazione
 
