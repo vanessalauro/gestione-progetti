@@ -73,7 +73,6 @@
               <v-btn class="icon-button">
                 <i class="mdi mdi-plus"></i>
                 <v-dialog v-model="insertDialog" activator="parent" width="1024">
-                  {{ modalInsert }}
                   <v-card>
                     <v-card-title>
                       <span class="headline">Nuovo Intervento</span>
@@ -208,7 +207,6 @@
                       <v-btn class="icon-button mr-2" @click="getProject(progetto)">
                         <i class="mdi mdi-pencil"></i>
                         <v-dialog v-model="dialogEdit" activator="parent" width="1024">
-                          {{ modalEdit }}
                           <v-card>
                             <v-card-title>
                               <span class="headline">Modifica Intervento n. {{ modalEdit.idIntervento }}</span>
